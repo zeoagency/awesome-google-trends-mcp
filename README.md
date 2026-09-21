@@ -9,39 +9,35 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 ## Contents
 
 - [Quick comparison table](#quick-comparison-table)
-- [1. Scrape with proxy resilience and anti-bot bypass (9)](#1-scrape-with-proxy-resilience-and-anti-bot-bypass)
+- [1. Scrape with proxy resilience and anti-bot bypass (6)](#1-scrape-with-proxy-resilience-and-anti-bot-bypass)
   - [Rotating residential proxy pools and failover tracking (3)](#rotating-residential-proxy-pools-and-failover-tracking)
-  - [Anti-detect browser emulation and fingerprint masking (3)](#anti-detect-browser-emulation-and-fingerprint-masking)
-  - [Session cookie jars and NID token persistence (3)](#session-cookie-jars-and-nid-token-persistence)
+  - [Anti-detect browser emulation and fingerprint masking (2)](#anti-detect-browser-emulation-and-fingerprint-masking)
+  - [Session cookie jars and NID token persistence (1)](#session-cookie-jars-and-nid-token-persistence)
 - [2. Persist, cache, and archive historical trends (6)](#2-persist-cache-and-archive-historical-trends)
   - [Embedded SQLite storage in WAL mode (2)](#embedded-sqlite-storage-in-wal-mode)
   - [Ephemeral daily trend snapshot archives (2)](#ephemeral-daily-trend-snapshot-archives)
   - [Multi-tier cache TTL and stale-while-error fallback (2)](#multi-tier-cache-ttl-and-stale-while-error-fallback)
-- [3. Connect through hosted commercial APIs (5)](#3-connect-through-hosted-commercial-apis)
+- [3. Connect through hosted commercial APIs (2)](#3-connect-through-hosted-commercial-apis)
   - [Consolidated single-tool enum MCP servers (1)](#consolidated-single-tool-enum-mcp-servers)
-  - [Multi-search gateways and commercial SERP aggregators (2)](#multi-search-gateways-and-commercial-serp-aggregators)
-  - [Marketing analytics and reporting integrations (1)](#marketing-analytics-and-reporting-integrations)
   - [Containerized Cloud Run and Docker deployments (1)](#containerized-cloud-run-and-docker-deployments)
-- [4. Monitor rate-immune RSS and news intelligence (6)](#4-monitor-rate-immune-rss-and-news-intelligence)
-  - [Rate-immune public XML syndication harvesters (2)](#rate-immune-public-xml-syndication-harvesters)
-  - [Trending news clustering and article distillation (2)](#trending-news-clustering-and-article-distillation)
-  - [Autonomous trend monitoring agents and recurring scanners (2)](#autonomous-trend-monitoring-agents-and-recurring-scanners)
-- [5. Integrate with developer assistants and coding IDEs (4)](#5-integrate-with-developer-assistants-and-coding-ides)
+- [4. Monitor rate-immune RSS and news intelligence (3)](#4-monitor-rate-immune-rss-and-news-intelligence)
+  - [Rate-immune public XML syndication harvesters (1)](#rate-immune-public-xml-syndication-harvesters)
+  - [Trending news clustering and article distillation (1)](#trending-news-clustering-and-article-distillation)
+  - [Autonomous trend monitoring agents and recurring scanners (1)](#autonomous-trend-monitoring-agents-and-recurring-scanners)
+- [5. Integrate with developer assistants and coding IDEs (3)](#5-integrate-with-developer-assistants-and-coding-ides)
   - [Zero-config Claude Code marketplace servers (2)](#zero-config-claude-code-marketplace-servers)
-  - [Claude-specific trend agents and prompts (1)](#claude-specific-trend-agents-and-prompts)
   - [Regional market locators and Asian language editions (1)](#regional-market-locators-and-asian-language-editions)
 - [6. Execute high-performance binaries and terminal CLIs (9)](#6-execute-high-performance-binaries-and-terminal-clis)
   - [Compiled Go engines and multi-transport daemons (2)](#compiled-go-engines-and-multi-transport-daemons)
   - [High-performance Rust scrapers and pipelines (3)](#high-performance-rust-scrapers-and-pipelines)
   - [Interactive terminal shells and CLI query tools (2)](#interactive-terminal-shells-and-cli-query-tools)
   - [Lightweight TypeScript and JavaScript engines (2)](#lightweight-typescript-and-javascript-engines)
-- [7. Aggregate multi-platform search momentum (3)](#7-aggregate-multi-platform-search-momentum)
-  - [Cross-network momentum aggregators (3)](#cross-network-momentum-aggregators)
-- [8. Orchestrate enterprise pipelines and warehouse ingestion (5)](#8-orchestrate-enterprise-pipelines-and-warehouse-ingestion)
+- [7. Aggregate multi-platform search momentum (1)](#7-aggregate-multi-platform-search-momentum)
+  - [Cross-network momentum aggregators (1)](#cross-network-momentum-aggregators)
+- [8. Orchestrate enterprise pipelines and warehouse ingestion (3)](#8-orchestrate-enterprise-pipelines-and-warehouse-ingestion)
   - [Airflow orchestration DAGs and dbt star schemas (1)](#airflow-orchestration-dags-and-dbt-star-schemas)
   - [Official Google Cloud BigQuery public dataset connectors (1)](#official-google-cloud-bigquery-public-dataset-connectors)
-  - [Data lake batch pipelines and columnar storage (1)](#data-lake-batch-pipelines-and-columnar-storage)
-  - [Clean architecture adapters and territorial intelligence (2)](#clean-architecture-adapters-and-territorial-intelligence)
+  - [Clean architecture adapters and territorial intelligence (1)](#clean-architecture-adapters-and-territorial-intelligence)
 - [Resources](#resources)
 - [Reference](#reference)
 
@@ -49,7 +45,7 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 
 ## Quick comparison table
 
-*47 projects. High-density decision matrix optimized for fast scanning. Project names link directly to detailed sections.*
+*33 projects. High-density decision matrix optimized for fast scanning. Project names link directly to detailed sections.*
 
 **Legend:**
 
@@ -59,18 +55,16 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 
 | Project | Interface | Runtime | Anti-Bot Resilience | Cache Engine | Transport | Tier |
 |---|---|---|---|---|---|---|
-| [**0xmariowu/Autosearch**](#autonomous-trend-monitoring-agents-and-recurring-scanners) | Agent | Node | ⚡ RSS/SQL | ⏱️ Memory | CLI | ★★☆ |
-| [**akvise/trends-checker**](#rotating-residential-proxy-pools-and-failover-tracking) | CLI | Python | 🛡️ Pool | ⏱️ Memory | CLI | ★★☆ |
+| [**akvise/trends-checker**](#rotating-residential-proxy-pools-and-failover-tracking) | CLI | Python | 🛡️ Pool | ⏱️ Memory | CLI | ★★★ |
 | [**AKzar1el/mcp-trendpulse**](#rate-immune-public-xml-syndication-harvesters) | MCP | Python | ⚡ RSS/SQL | ⏱️ Memory | stdio | ★★★ |
 | [**asgard-ai-platform/mcp-google-trends-tw**](#regional-market-locators-and-asian-language-editions) | MCP | Python | ⚠️ Basic | — | stdio | ★★☆ |
-| [**calipsow/gtrends**](#anti-detect-browser-emulation-and-fingerprint-masking) | Library | Python | 🎭 Browser | ⏱️ Memory | CLI | ★★☆ |
 | [**claude-world/trend-pulse**](#autonomous-trend-monitoring-agents-and-recurring-scanners) | MCP + CLI | Python | ⚡ RSS/SQL | ⏱️ Memory | stdio+CLI | ★★☆ |
 | [**david-wulf/trends-mcp-local**](#embedded-sqlite-storage-in-wal-mode) | MCP | Python | ⚠️ Basic | 💾 SQLite | stdio | ★★☆ |
 | [**den-indance/google-trends-mcp**](#rotating-residential-proxy-pools-and-failover-tracking) | MCP | Node | 🛡️ Pool | ⏱️ Memory | stdio | ★★★ |
 | [**ducnhd/google-data-mcp**](#session-cookie-jars-and-nid-token-persistence) | MCP | Python | ⚠️ Basic | ⏱️ Memory | stdio | ★★☆ |
-| [**Eason-Gao3/google-trends-mcp**](#rotating-residential-proxy-pools-and-failover-tracking) | MCP | Node | 🛡️ Pool | 💾 SQLite | stdio | ★★★ |
+| [**Eason-Gao3/google-trends-mcp**](#rotating-residential-proxy-pools-and-failover-tracking) | MCP | Python | 🛡️ Pool | 💾 SQLite | stdio | ★★★ |
 | [**flack0x/trendspyg**](#embedded-sqlite-storage-in-wal-mode) | MCP + CLI | Python | ⚠️ Basic | 💾 SQLite | stdio+CLI | ★★★ |
-| [**goncaloaguer/unofficial-google-trends-mcp**](#containerized-cloud-run-and-docker-deployments) | MCP | Python | ⚠️ Basic | — | HTTP/SSE | ★★☆ |
+| [**goncaloaguer/unofficial-google-trends-mcp**](#containerized-cloud-run-and-docker-deployments) | MCP | Python | ⚠️ Basic | ⏱️ Memory | HTTP/SSE | ★★☆ |
 | [**groovili/gogtrends**](#compiled-go-engines-and-multi-transport-daemons) | Library | Go | ⚠️ Basic | ⏱️ Memory | Library | ★★☆ |
 | [**HasData/google-trends-mcp**](#consolidated-single-tool-enum-mcp-servers) | MCP | Node | 🛡️ Pool | — | stdio+HTTP | ★★★ |
 | [**iswangwenbin/ohmytrends**](#anti-detect-browser-emulation-and-fingerprint-masking) | CLI + API | Bun | 🎭 Browser | ⏱️ Memory | CLI+HTTP | ★★☆ |
@@ -79,31 +73,19 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 | [**LafCorentin/gtrend-rs**](#high-performance-rust-scrapers-and-pipelines) | Library | Rust | ⚠️ Basic | ⏱️ Memory | Library | ★★☆ |
 | [**lhitches/google-trends-mcp**](#zero-config-claude-code-marketplace-servers) | MCP | Python | ⚠️ Basic | — | stdio | ★★★ |
 | [**mamboyepez17/trendscope**](#ephemeral-daily-trend-snapshot-archives) | Service | Python | ⚠️ Basic | 💾 SQLite | HTTP | ★★☆ |
-| [**mvanhorn/printing-press-library**](#compiled-go-engines-and-multi-transport-daemons) | CLI | Go | ⚠️ Basic | ⏱️ Memory | CLI+HTTP | ★★★ |
+| [**mvanhorn/printing-press-library**](#compiled-go-engines-and-multi-transport-daemons) | CLI | Go | ⚠️ Basic | — | CLI | ★★★ |
 | [**Nao-30/google-trends-cli**](#interactive-terminal-shells-and-cli-query-tools) | CLI | Python | ⚠️ Basic | — | CLI | ★★☆ |
-| [**nonatin1000/02-google-trends-agent-z**](#multi-search-gateways-and-commercial-serp-aggregators) | Agent | Python | 🛡️ Pool | — | CLI | ★★☆ |
 | [**pat310/google-trends-api**](#lightweight-typescript-and-javascript-engines) | Library | Node | ⚠️ Basic | — | Library | ★★★ |
 | [**pipeworx-io/mcp-google-trends**](#multi-tier-cache-ttl-and-stale-while-error-fallback) | MCP | Node | ⚠️ Basic | ⏱️ Memory | stdio | ★★☆ |
-| [**pohjanlaakso/google_trends_pipeline**](#data-lake-batch-pipelines-and-columnar-storage) | Pipeline | Node | ⚠️ Basic | 🗄️ Lake | Batch | ★★☆ |
 | [**purahmanian/google-trends-mcp**](#zero-config-claude-code-marketplace-servers) | MCP | Node | ⚠️ Basic | — | stdio | ★★☆ |
 | [**Quadstronaut/SocialScour**](#ephemeral-daily-trend-snapshot-archives) | Aggregator | Python | ⚠️ Basic | 💾 SQLite | CLI | ★★☆ |
 | [**rainmanjam/headwater**](#clean-architecture-adapters-and-territorial-intelligence) | API + MCP | Python | ⚠️ Basic | ⏱️ Memory | stdio+HTTP | ★★☆ |
 | [**rcsolis/trendscli**](#interactive-terminal-shells-and-cli-query-tools) | CLI | Go | ⚠️ Basic | — | CLI | ★★☆ |
 | [**RuochenLyu/google-trends-now**](#multi-tier-cache-ttl-and-stale-while-error-fallback) | CLI + Node | Node | ⚡ RSS/SQL | ⏱️ Memory | CLI | ★★☆ |
-| [**senolalgul8-alt/google-trends-proxy**](#session-cookie-jars-and-nid-token-persistence) | Proxy Tunnel | Python | 🛡️ Pool | — | HTTP | ★★☆ |
 | [**shadawck/rust-trend**](#high-performance-rust-scrapers-and-pipelines) | Library | Rust | ⚠️ Basic | ⏱️ Memory | Library | ★★☆ |
 | [**Shaivpidadi/trends-js**](#lightweight-typescript-and-javascript-engines) | Library | Node | ⚠️ Basic | — | Library | ★★☆ |
-| [**ski-p3r/google-news-trends-mcp**](#rate-immune-public-xml-syndication-harvesters) | MCP | Python | ⚡ RSS/SQL | ⏱️ Memory | stdio | ★★☆ |
-| [**superagents-lab/search1api-mcp**](#multi-search-gateways-and-commercial-serp-aggregators) | MCP | Node | 🛡️ Pool | — | stdio+HTTP | ★★☆ |
 | [**t3chnicallyinclined/autoseo**](#high-performance-rust-scrapers-and-pipelines) | CLI | Rust | ⚠️ Basic | ⏱️ Memory | CLI | ★★☆ |
-| [**tawiza/tawiza**](#clean-architecture-adapters-and-territorial-intelligence) | Platform | Node | ⚠️ Basic | 🗄️ Lake | HTTP | ★★☆ |
-| [**ToolOracle/newsoracle**](#trending-news-clustering-and-article-distillation) | MCP | Docker | ⚡ RSS/SQL | ⏱️ Memory | stdio | ★★☆ |
 | [**trendsmcp-ai/google-trends-mcp**](#cross-network-momentum-aggregators) | MCP | Python | ⚠️ Basic | — | stdio | ★★☆ |
-| [**trendsmcp-ai/trends-agent-claude**](#claude-specific-trend-agents-and-prompts) | Agent | Node | ⚠️ Basic | — | stdio | ★★☆ |
-| [**trendsmcp-ai/Trends-MCP**](#cross-network-momentum-aggregators) | MCP | Python | ⚠️ Basic | — | stdio | ★★☆ |
-| [**trendsmcp-ai/TrendWatch**](#cross-network-momentum-aggregators) | Service | Python | ⚠️ Basic | ⏱️ Memory | CLI | ★★☆ |
-| [**tuckerelbon-hash/pytrends-proxy**](#session-cookie-jars-and-nid-token-persistence) | Proxy Tunnel | Python | 🛡️ Pool | — | HTTP | ★★☆ |
-| [**twominutereports/google-trends-mcp**](#marketing-analytics-and-reporting-integrations) | MCP | Node | ⚠️ Basic | — | stdio | ★★☆ |
 | [**VytautasPliadis/Google-Trends-pipeline**](#airflow-orchestration-dags-and-dbt-star-schemas) | Pipeline | Python | ⚠️ Basic | 🗄️ Lake | Batch | ★★★ |
 | [**yiromo/pytrends-modern**](#anti-detect-browser-emulation-and-fingerprint-masking) | Library | Python | 🎭 Browser | ⏱️ Memory | CLI | ★★☆ |
 
@@ -111,7 +93,7 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 
 ## 1. Scrape with proxy resilience and anti-bot bypass
 
-*9 projects. Scrapers, proxy pools, and anti-detect browsers designed to bypass Google's 429 rate limits and HTML challenge blocks.*
+*6 projects. Scrapers, proxy pools, and anti-detect browsers designed to bypass Google's 429 rate limits and HTML challenge blocks.*
 
 ### Rotating residential proxy pools and failover tracking
 
@@ -125,23 +107,20 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 
 ### Anti-detect browser emulation and fingerprint masking
 
-*3 projects. Headless browser engines (Camoufox, Playwright) that solve Google bot challenges and bypass TLS fingerprints.*
+*2 projects. Headless browser engines (Camoufox, Playwright) that solve Google bot challenges and bypass TLS fingerprints.*
 
 | Project | What it does |
 |---|---|
 | [**yiromo/pytrends-modern**](https://github.com/yiromo/pytrends-modern) | Drives headless Camoufox anti-detect browsers with dynamic Chrome extension proxy authentication to solve Google challenge screens. Bypasses TLS fingerprinting at the cost of higher startup latency and memory overhead. |
-| [**calipsow/gtrends**](https://github.com/calipsow/gtrends) | Wraps modern pytrends with automated headless browser session bootstrapping and disk caching. Ingests NID session cookies before issuing explore requests to prevent repetitive consent roadblocks. |
 | [**iswangwenbin/ohmytrends**](https://github.com/iswangwenbin/ohmytrends) | Provides a high-speed Bun CLI and API engine that queries Google Trends and Baidu Index in parallel. Employs persistent browser profile cloaking to scrape real-time search trends without external proxy fleets. |
 
 ### Session cookie jars and NID token persistence
 
-*3 projects. Persistent cookie storage across server lifecycles to maintain authenticated Google session trust.*
+*1 project. Persistent cookie storage across server lifecycles to maintain authenticated Google session trust.*
 
 | Project | What it does |
 |---|---|
 | [**ducnhd/google-data-mcp**](https://github.com/ducnhd/google-data-mcp) | Exposes unified MCP tools for Google Trends and Google Ads with automatic session cookie reuse. Retries failed explore requests using exponential backoff to handle intermittent upstream throttling. |
-| [**tuckerelbon-hash/pytrends-proxy**](https://github.com/tuckerelbon-hash/pytrends-proxy) | Forwards pytrends network traffic through an authenticated HTTP proxy tunnel with retry wrapping. Simplifies containerized deployment by abstracting proxy configuration into standard environment variables. |
-| [**senolalgul8-alt/google-trends-proxy**](https://github.com/senolalgul8-alt/google-trends-proxy) | Operates a lightweight local proxy forwarder daemon specifically tuned for Google Trends explore endpoints. Intercepts outgoing client requests to inject rotating residential proxy headers transparently. |
 
 ## 2. Persist, cache, and archive historical trends
 
@@ -176,7 +155,7 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 
 ## 3. Connect through hosted commercial APIs
 
-*5 projects. Cloud-managed APIs and commercial gateways that offload anti-bot mitigation and guarantee uptime SLAs.*
+*2 projects. Cloud-managed APIs and commercial gateways that offload anti-bot mitigation and guarantee uptime SLAs.*
 
 ### Consolidated single-tool enum MCP servers
 
@@ -186,65 +165,45 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 |---|---|
 | [**HasData/google-trends-mcp**](https://github.com/HasData/google-trends-mcp) | Delegates anti-bot mitigation, proxy rotation, and CAPTCHA bypass to HasData's managed cloud infrastructure. Employs a single consolidated MCP tool with a discriminated dataType enum, consuming only 380 prompt tokens while offering 1,000 free monthly credits. |
 
-### Multi-search gateways and commercial SERP aggregators
-
-*2 projects. Hosted search platforms integrating Google Trends alongside crawling and SERP feeds.*
-
-| Project | What it does |
-|---|---|
-| [**superagents-lab/search1api-mcp**](https://github.com/superagents-lab/search1api-mcp) | Integrates Google Trends timeseries queries alongside web search and crawling tools under a single hosted API gateway. Normalizes search volume curves for multi-agent workflows without requiring local proxy management. |
-| [**nonatin1000/02-google-trends-agent-z**](https://github.com/nonatin1000/02-google-trends-agent-z) | Orchestrates LangGraph agent research workflows using SerpApi's managed Google Trends integration. Routes keyword comparison tasks through SLA-backed endpoints with automated error recovery. |
-
-### Marketing analytics and reporting integrations
-
-*1 project. Commercial connectors syncing Google Trends with BI dashboards and automated client reports.*
-
-| Project | What it does |
-|---|---|
-| [**twominutereports/google-trends-mcp**](https://github.com/twominutereports/google-trends-mcp) | Connects Google Trends search metrics directly into automated BI reporting pipelines and marketing dashboards. Formats multi-region interest data into structured tables ready for scheduled reporting. |
-
 ### Containerized Cloud Run and Docker deployments
 
 *1 project. Packaged container images deployable to cloud runtimes with pre-configured API keys.*
 
 | Project | What it does |
 |---|---|
-| [**goncaloaguer/unofficial-google-trends-mcp**](https://github.com/goncaloaguer/unofficial-google-trends-mcp) | Packages an unofficial Google Trends MCP server into a lightweight Google Cloud Run container. Exposes Streamable HTTP and SSE transports with container-level environment variable configuration. |
+| [**goncaloaguer/unofficial-google-trends-mcp**](https://github.com/goncaloaguer/unofficial-google-trends-mcp) | Packages an unofficial Google Trends MCP server into a lightweight Google Cloud Run container. Exposes Streamable HTTP and SSE transports with in-memory TTL caching and container-level environment variable configuration. |
 
 ## 4. Monitor rate-immune RSS and news intelligence
 
-*6 projects. Tools that bypass Google anti-bot systems via public XML syndication and correlate trends with news coverage.*
+*3 projects. Tools that bypass Google anti-bot systems via public XML syndication and correlate trends with news coverage.*
 
 ### Rate-immune public XML syndication harvesters
 
-*2 projects. Zero-proxy RSS parsers completely immune to HTTP 429 bans and CAPTCHAs.*
+*1 project. Zero-proxy RSS parsers completely immune to HTTP 429 bans and CAPTCHAs.*
 
 | Project | What it does |
 |---|---|
 | [**AKzar1el/mcp-trendpulse**](https://github.com/AKzar1el/mcp-trendpulse) | Queries Google's public XML RSS syndication feeds, making it 100% immune to HTTP 429 rate limits and anti-bot challenges without proxies. Correlates search momentum with Google News article clustering and supports custom growth windows. |
-| [**ski-p3r/google-news-trends-mcp**](https://github.com/ski-p3r/google-news-trends-mcp) | Extracts trending search feeds via public XML syndication and parses associated news publisher metadata. Runs entirely without proxy pools or API credentials. |
 
 ### Trending news clustering and article distillation
 
-*2 projects. Pipelines correlating search surges with publisher news articles and NLP summaries.*
+*1 project. Pipelines correlating search surges with publisher news articles and NLP summaries.*
 
 | Project | What it does |
 |---|---|
 | [**jmanek/google-news-trends-mcp**](https://github.com/jmanek/google-news-trends-mcp) | Pioneered rate-immune trend extraction by pairing Google News RSS feeds with NLP article summarization. Distills publisher coverage to explain the context behind viral search surges without triggering bot traps. |
-| [**ToolOracle/newsoracle**](https://github.com/ToolOracle/newsoracle) | Monitors news coverage surges paired with Google search interest signals to detect emerging media narratives. Extracts key entity quotes and publisher consensus before delivering structured summaries. |
 
 ### Autonomous trend monitoring agents and recurring scanners
 
-*2 projects. Agentic background loops scanning topic momentum on scheduled intervals.*
+*1 project. Agentic background loops scanning topic momentum on scheduled intervals.*
 
 | Project | What it does |
 |---|---|
-| [**0xmariowu/Autosearch**](https://github.com/0xmariowu/Autosearch) | Drives autonomous background research loops that detect emerging search spikes and initiate multi-source web deep dives. Employs token-efficient response pruning to protect LLM context windows. |
 | [**claude-world/trend-pulse**](https://github.com/claude-world/trend-pulse) | Integrates 20 trending data sources into a unified Python library and MCP server with scheduled scanners. Normalizes Google Trends data alongside developer feeds for automated morning briefing agents. |
 
 ## 5. Integrate with developer assistants and coding IDEs
 
-*4 projects. Zero-config MCP servers tailored for Claude Code, Cursor, Windsurf, and developer coding workflows.*
+*3 projects. Zero-config MCP servers tailored for Claude Code, Cursor, Windsurf, and developer coding workflows.*
 
 ### Zero-config Claude Code marketplace servers
 
@@ -253,15 +212,7 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 | Project | What it does |
 |---|---|
 | [**lhitches/google-trends-mcp**](https://github.com/lhitches/google-trends-mcp) | Provides a keyless FastMCP server designed specifically for Claude Code and Cursor desktop assistants. Exposes four clean tools covering interest over time, related queries, regional interest, and trending searches. |
-| [**purahmanian/google-trends-mcp**](https://github.com/purahmanian/google-trends-mcp) | Installs with a single command via uvx to deliver zero-config Google Trends exploration for local AI coding assistants. Handles parameter validation internally to prevent cryptic upstream errors. |
-
-### Claude-specific trend agents and prompts
-
-*1 project. Specialized prompt packs and tool plugins optimized for Claude desktop assistants.*
-
-| Project | What it does |
-|---|---|
-| [**trendsmcp-ai/trends-agent-claude**](https://github.com/trendsmcp-ai/trends-agent-claude) | Delivers a Claude-tailored prompt pack and MCP tool wrapper pre-configured for market analysis. Formats relative interest curves with explicit 0-100 scaling documentation to prevent hallucinated volume claims. |
+| [**purahmanian/google-trends-mcp**](https://github.com/purahmanian/google-trends-mcp) | Installs with a single command via npx to deliver zero-config Google Trends exploration for local AI coding assistants. Handles parameter validation internally to prevent cryptic upstream errors. |
 
 ### Regional market locators and Asian language editions
 
@@ -281,7 +232,7 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 
 | Project | What it does |
 |---|---|
-| [**mvanhorn/printing-press-library**](https://github.com/mvanhorn/printing-press-library) | Compiles into a native Go binary delivering sub-10ms cold starts and under 15MB of resident memory. Exposes dual stdio and Streamable HTTP transports with optional DataForSEO Explore integration. |
+| [**mvanhorn/printing-press-library**](https://github.com/mvanhorn/printing-press-library/tree/main/library/marketing/google-trends) | Compiles into a native Go binary delivering sub-10ms cold starts and under 15MB resident memory. Queries Google Trends explore endpoints directly and outputs structured JSON to stdout for agent pipelines. |
 | [**groovili/gogtrends**](https://github.com/groovili/gogtrends) | Provides the canonical Go client library for Google Trends internal endpoints with native concurrency support. Handles cookie management and request pacing across parallel goroutines. |
 
 ### High-performance Rust scrapers and pipelines
@@ -314,21 +265,19 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 
 ## 7. Aggregate multi-platform search momentum
 
-*3 projects. Multi-network engines monitoring search and viral momentum across Google and social platforms.*
+*1 project. Multi-network engines monitoring search and viral momentum across Google and social platforms.*
 
 ### Cross-network momentum aggregators
 
-*3 projects. Engines simultaneously querying Google Trends alongside social platforms.*
+*1 project. Engines simultaneously querying Google Trends alongside social platforms.*
 
 | Project | What it does |
 |---|---|
-| [**trendsmcp-ai/Trends-MCP**](https://github.com/trendsmcp-ai/Trends-MCP) | Aggregates search momentum across Google Trends, TikTok, and YouTube to provide multi-platform trend intelligence. Compares relative search interest against social video engagement. |
-| [**trendsmcp-ai/TrendWatch**](https://github.com/trendsmcp-ai/TrendWatch) | Monitors emerging keyword velocity across search engines and social platforms using unified agent tools. Generates consolidated momentum alerts for social listening pipelines. |
 | [**trendsmcp-ai/google-trends-mcp**](https://github.com/trendsmcp-ai/google-trends-mcp) | Provides real-time Google search trends with automated multi-region support and category filtering. Prepares trend data for downstream LLM synthesis and agent tool calls. |
 
 ## 8. Orchestrate enterprise pipelines and warehouse ingestion
 
-*5 projects. Production data engineering pipelines, BigQuery public datasets, and territorial intelligence systems.*
+*3 projects. Production data engineering pipelines, BigQuery public datasets, and territorial intelligence systems.*
 
 ### Airflow orchestration DAGs and dbt star schemas
 
@@ -346,21 +295,12 @@ Official links: [Google Trends](https://trends.google.com/) · [Model Context Pr
 |---|---|
 | [**jp-caldas/bigquery-google-trends-mcp**](https://github.com/jp-caldas/bigquery-google-trends-mcp) | Queries Google Cloud's official BigQuery public dataset (`bigquery-public-data.google_trends`) using standard SQL tools. Delivers zero-scraping enterprise compliance and multi-year historical depth with zero proxy risk. |
 
-### Data lake batch pipelines and columnar storage
-
-*1 project. Batch extractors structuring historical trends into Parquet, DuckDB, and Postgres tables.*
-
-| Project | What it does |
-|---|---|
-| [**pohjanlaakso/google_trends_pipeline**](https://github.com/pohjanlaakso/google_trends_pipeline) | Streams Google Trends timeseries into a Parquet-backed data lake with automated partition management. Enables sub-second columnar queries via DuckDB or Apache Spark. |
-
 ### Clean architecture adapters and territorial intelligence
 
-*2 projects. Domain-driven adapters integrating Google Trends into regional and geospatial intelligence platforms.*
+*1 project. Domain-driven adapters integrating Google Trends into regional and geospatial intelligence platforms.*
 
 | Project | What it does |
 |---|---|
-| [**tawiza/tawiza**](https://github.com/tawiza/tawiza) | Applies Clean Architecture principles to encapsulate pytrends data fetching inside an enterprise territorial intelligence platform. Decouples upstream scraping from core business analytics. |
 | [**rainmanjam/headwater**](https://github.com/rainmanjam/headwater) | Exposes a unified self-hosted REST and MCP API for Google Maps, News, Trends, and Autocomplete. Centralizes credential and proxy management behind a single local microservice. |
 
 ---
