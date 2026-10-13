@@ -1,62 +1,27 @@
-# AGENTS.md
+# Catalog maintenance
 
-Working rules and language guidelines for anyone — human or agent — editing this repository. It is a curated, plain-English index of the Google Trends Model Context Protocol (MCP) and agent tooling ecosystem. Keep it lean, minimalist, and immediately useful.
+This repository lists MCP servers, command-line tools (CLIs), and client libraries or SDKs that expose Google Trends data. Keep the catalog concise and in plain English.
 
----
+## Inclusion rules
 
-## 1. Project Philosophy & Minimalist Structure
+- Require a publicly accessible implementation that retrieves Google Trends data through its endpoints, RSS feed, a Google Trends provider API, or Google's Trends dataset in BigQuery.
+- Include tools covering multiple services only when their Google Trends integration is implemented and accessible through an MCP tool, CLI command, or reusable client library.
+- Exclude standalone web services, dashboards, batch pipelines, news-only tools, empty scaffolds, and generic SEO tools without an implemented Google Trends integration.
+- List each project once under its primary interface: MCP, CLI, or SDKs and client libraries. Mention additional interfaces in its description and comparison row.
+- Keep archived clients when they remain useful as references, and mark them **Archived**. Do not imply that an unarchived project is actively maintained or works against current upstream endpoints.
+- Resolve redirects to the canonical repository. Exclude duplicate forks or wrappers without substantive standalone utility. First-party connectors to hosted Google Trends MCP services qualify; label the hosted service and required credentials explicitly.
 
-- **No Onboarding Tutorials:** Do not add introductory installation essays, "how to choose your layer" tables, or getting-started walkthroughs to the catalog root. Keep the README strictly minimalist: title, official links, Table of Contents with counts, direct jump links into the tables, and the developer decision matrix.
-- **Fast Jump Navigation:** Readers should jump straight to the relevant problem domain from the Table of Contents in 1 click.
+## Verify every entry
 
----
+1. Inspect the project's README and source code. Confirm the Google Trends data source, implemented interface, and each feature included in the description.
+2. Link to the canonical repository or the specific tool directory in a larger repository. Check archive status through GitHub.
+3. Use concise, verb-first descriptions of one or two sentences. Describe concrete behavior; omit unsupported speed, quota, uptime, anti-bot immunity, pricing, and quality claims.
+4. Keep the README limited to its title, scope, official links, counted contents, comparison table, and the three tool sections. Retain supporting repository policies separately.
+5. Update counts, comparison rows, and internal anchors together. Every comparison row must correspond to exactly one catalog entry.
 
-## 2. Project Language & Voice Values
+## Before committing
 
-The language of this catalog must be simple, direct, and developer-friendly:
-
-### 2.1. Plain-English, Verb-First Prose
-
-- Lead with active verbs (*Adds*, *Scrapes*, *Caches*, *Rotates*, *Normalizes*, *Exposes*, *Orchestrates*, *Monitors*).
-- Avoid passive constructions, convoluted em-dash chains, and marketing buzzwords (*"ultimate"*, *"blazing fast"*, *"revolutionary"*).
-- State clearly what an agent or developer can *do* with the tool, not a laundry list of generic features.
-
-### 2.2. The 1–2 Sentence Rule
-
-Every project entry must be strictly 1 or 2 concise sentences (never exceeding 3 sentences):
-
-- **Sentence 1:** What the tool specifically does for a developer or agent.
-- **Sentence 2:** How it differs from its closest alternatives (e.g. proxy handling, SQLite caching, single consolidated enum vs multi-tool sprawl, or public RSS bypass).
-
-### 2.3. Subcategory Header & Table Standards
-
-Every subcategory begins with a count and a 1-sentence summary, followed by a clean 2-column markdown table:
-
-```markdown
-### Rotating residential proxy pools and failover tracking
-
-*3 projects. Multi-proxy pool ingestion, randomized per-request rotation, and active failover tracking.*
-
-| Project | What it does |
-|---|---|
-| [**owner/repo**](https://github.com/owner/repo) | Plain-English explanation of what the tool does and who it is for. |
-```
-
----
-
-## 3. Strict Exclusion Criteria (What NEVER Belongs Here)
-
-To maintain a high-signal catalog, the following must **never** be added:
-
-1. **NO Generic SEO or Keyword Tools:** Only tools explicitly interfacing with Google Trends data endpoints qualify.
-2. **NO Empty Scaffolds or Incomplete Stubs:** Repositories without working command implementations, design-only documents, or broken builds.
-3. **NO Trivial Copy-Paste Wrappers:** Near-duplicate forks or minimal shims without substantive standalone utility.
-4. **NO Marketing Hype or AI Filler:** Descriptions must remain factual, concise, and neutral.
-
----
-
-## 4. Before Committing
-
-1. Run `npx markdownlint-cli2 "**/*.md"` — it must exit clean with **0 issues** (same check CI runs).
-2. Ensure every internal anchor link resolves correctly.
-3. Commit with the conventional commit format: `docs(awesome-list): <summary>`.
+- Run `npx --yes markdownlint-cli2@latest "**/*.md"` with zero issues, matching CI.
+- Verify internal anchors, relative file links, project links, counts, and unique entries.
+- Review the complete diff for unsupported claims and material outside the inclusion rules.
+- Use `docs(awesome-list): <summary>` as the commit format.
