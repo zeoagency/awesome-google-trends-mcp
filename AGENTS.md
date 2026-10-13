@@ -1,27 +1,28 @@
 # Catalog maintenance
 
-This repository lists MCP servers, command-line tools (CLIs), and client libraries or SDKs that expose Google Trends data. Keep the catalog concise and in plain English.
+This repository documents MCP tools with Google Trends integrations, plus a separate CLI and SDK list. Keep navigation concise and descriptions factual, in plain English.
 
-## Inclusion rules
+## Inclusion and grouping
 
-- Require a publicly accessible implementation that retrieves Google Trends data through its endpoints, RSS feed, a Google Trends provider API, or Google's Trends dataset in BigQuery.
-- Include tools covering multiple services only when their Google Trends integration is implemented and accessible through an MCP tool, CLI command, or reusable client library.
-- Exclude standalone web services, dashboards, batch pipelines, news-only tools, empty scaffolds, and generic SEO tools without an implemented Google Trends integration.
-- List each project once under its primary interface: MCP, CLI, or SDKs and client libraries. Mention additional interfaces in its description and comparison row.
-- Keep archived clients when they remain useful as references, and mark them **Archived**. Do not imply that an unarchived project is actively maintained or works against current upstream endpoints.
-- Resolve redirects to the canonical repository. Exclude duplicate forks or wrappers without substantive standalone utility. First-party connectors to hosted Google Trends MCP services qualify; label the hosted service and required credentials explicitly.
+- Require implemented Google Trends access through endpoints, RSS, a provider API, or Google's public BigQuery dataset. Research tools may deliver data as local artifacts; describe that output explicitly.
+- Include broader servers only when their actual tool handlers integrate Google Trends. Exclude news-only servers, empty scaffolds, and generic SEO tools without that integration.
+- Group MCPs by registered tool names, parameters, and implementation behavior. Use one primary capability group per provider; choose useful tool links rather than ratings or project marketing.
+- Preserve distinct local, hosted, and conditional server surfaces. Record unsupported registrations in the full reference, but do not feature them as useful capabilities.
+- Hosted tools/list verifies a registration, not proprietary implementation or successful execution. State missing evidence; never infer an MCP schema from a similar REST API.
+- Keep unrelated tools from qualifying servers in their detail pages and the name index, with their scope marked. Use only Google Trends functionality to justify main-page inclusion.
+- Keep standalone CLIs and client libraries in docs/clients.md. Resolve canonical repository redirects, avoid duplicate forks, and mark archived repositories.
 
-## Verify every entry
+## Source of truth and verification
 
-1. Inspect the project's README and source code. Confirm the Google Trends data source, implemented interface, and each feature included in the description.
-2. Link to the canonical repository or the specific tool directory in a larger repository. Check archive status through GitHub.
-3. Use concise, verb-first descriptions of one or two sentences. Describe concrete behavior; omit unsupported speed, quota, uptime, anti-bot immunity, pricing, and quality claims.
-4. Keep the README limited to its title, scope, official links, counted contents, comparison table, and the three tool sections. Retain supporting repository policies separately.
-5. Update counts, comparison rows, and internal anchors together. Every comparison row must correspond to exactly one catalog entry.
+- data/mcp/*.json holds complete registered names, descriptions, input schemas, scope, source citations, and extraction limitations. Pin public sources to full commit SHAs and date hosted schema captures.
+- Inspect registration and handlers independently. Prefer local tools/list or isolated registration introspection; keep descriptive examples separate from schema constraints and runtime validation. Exclude injected context from caller parameters.
+- Enumerate the whole configured tool set. Preserve nullability, required fields, defaults, enums, bounds, array items, nested objects, definitions/references, and additionalProperties when declared. Do not invent missing descriptions or schemas.
+- data/catalog.json controls primary groups, concise behavior summaries, selected tool links, and material implementation notes. Summaries must describe what callers can obtain, including local-history coverage and known ignored parameters.
+- Generate README.md, docs/tools.md, and docs/mcp/*.md with `python3 maintenance/build_catalog.py`. Edit the JSON source rather than generated pages. Every registered tool name must link from the index to its full definition.
 
 ## Before committing
 
-- Run `npx --yes markdownlint-cli2@latest "**/*.md"` with zero issues, matching CI.
-- Verify internal anchors, relative file links, project links, counts, and unique entries.
-- Review the complete diff for unsupported claims and material outside the inclusion rules.
-- Use `docs(awesome-list): <summary>` as the commit format.
+1. Independently review extracted data against source or tools/list evidence, including registration completeness and source limitations.
+2. Run `python3 maintenance/build_catalog.py --check` and `npx --yes markdownlint-cli2@latest "**/*.md"` with zero issues.
+3. Review the diff for misleading capabilities, stale counts, broken links, and research artifacts. Keep temporary source checkouts and extraction notes outside the catalog.
+4. Use `docs(awesome-list): <summary>` as the commit format.

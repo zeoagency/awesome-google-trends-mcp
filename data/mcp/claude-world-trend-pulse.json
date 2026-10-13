@@ -1,0 +1,1331 @@
+{
+  "repo": "claude-world/trend-pulse",
+  "slug": "claude-world-trend-pulse",
+  "commit": "d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e",
+  "source_url": "https://github.com/claude-world/trend-pulse",
+  "subdirectory": null,
+  "extraction_method": "AST enumerated all top-level @mcp.tool() functions; reproduced unchanged signatures, defaults, annotations, decorators and docstrings with inert bodies in isolated FastMCP, then locally awaited list_tools(). MCP 1.30.0, Pydantic 2.13.5. Implementations separately inspected. No source module import, credential reads or tool calls.",
+  "limitations": [
+    "Dependency range mcp[cli]>=1.0 is unbounded; schemas reflect installed MCP 1.30.0 and Pydantic 2.13.5, not every possible dependency version.",
+    "Network source availability and credential-dependent execution not tested. Available plugin sources vary with optional dependencies, but all 29 MCP tools register unconditionally.",
+    "Google Trends supports current country RSS trends only; historical analyses operate on local saved snapshots. Google Trends keyword search is not implemented."
+  ],
+  "recommendation": "include",
+  "reason": "Complete schemas for all 29 unconditional tools established; implemented Google Trends RSS backend available through generic trend tools.",
+  "tools": [
+    {
+      "name": "get_trending",
+      "description": "Get trending topics from free sources.\n\nArgs:\n    sources: Comma-separated source names (default: all).\n             Built-in (20): google_trends, hackernews, mastodon, bluesky, wikipedia,\n             github, pypi, google_news, lobsters, devto, npm, reddit,\n             coingecko, dockerhub, stackoverflow, arxiv, producthunt, lemmy, dcard, ptt\n             Plugins (17+): weibo, youtube_trending, threads, line_today, mobile01,\n             bahamut, ettoday, yahoo_tw, udn, coinmarketcap, dexscreener,\n             indie_hackers, x_trending, tiktok_trending, xiaohongshu,\n             pinterest, linkedin_trending\n    geo: Country code for regional trends (e.g. TW, US, JP)\n    count: Number of results per source (default: 20)\n    save: Save snapshot to history DB for velocity tracking (default: false)\n\nReturns:\n    JSON with merged ranking + per-source results (includes direction/velocity if history exists)\n",
+      "inputSchema": {
+        "properties": {
+          "sources": {
+            "default": "",
+            "title": "Sources",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "count": {
+            "default": 20,
+            "title": "Count",
+            "type": "integer"
+          },
+          "save": {
+            "default": false,
+            "title": "Save",
+            "type": "boolean"
+          }
+        },
+        "title": "get_trendingArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetch selected sources concurrently, merge normalized scores, optionally save local snapshot and enrich velocity; Google Trends uses country RSS.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 200))",
+        "sources is a comma-separated string; whitespace/empty items stripped; empty means all. Unknown names are skipped (trending reports errors)."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 42,
+          "end_line": 70,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L42-L70"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "search_trends",
+      "description": "Search for a keyword across trend sources.\n\nArgs:\n    query: Search keyword\n    sources: Comma-separated source names (default: all searchable)\n    geo: Country code\n\nReturns:\n    JSON with search results across sources\n",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "sources": {
+            "default": "",
+            "title": "Sources",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_trendsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Search only sources overriding search(); Google Trends is skipped and cannot search keywords.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "sources is a comma-separated string; whitespace/empty items stripped; empty means all. Unknown names are skipped (trending reports errors).",
+        "google_trends is not searchable: source inherits base search and aggregator excludes it."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 73,
+          "end_line": 91,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L73-L91"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "list_sources",
+      "description": "List all available trend sources and their properties.",
+      "inputSchema": {
+        "properties": {},
+        "title": "list_sourcesArguments",
+        "type": "object"
+      },
+      "domain": "server-management",
+      "behavior": "Return metadata for instantiated built-in and available plugin sources.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 94,
+          "end_line": 97,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L94-L97"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_trend_history",
+      "description": "Query historical trend data for a keyword.\n\nArgs:\n    keyword: The keyword to look up (partial match supported)\n    days: Number of days to look back (default: 30)\n    source: Filter by source name (default: all sources)\n\nReturns:\n    JSON with historical records including timestamps and scores\n",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "title": "Keyword",
+            "type": "string"
+          },
+          "days": {
+            "default": 30,
+            "title": "Days",
+            "type": "integer"
+          },
+          "source": {
+            "default": "",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "get_trend_historyArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Query local SQLite snapshots by partial keyword, days and optional source; no Google Trends historical API.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 100,
+          "end_line": 117,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L100-L117"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "take_snapshot",
+      "description": "Take a trend snapshot: fetch from all sources and save to history DB.\n\nArgs:\n    sources: Comma-separated source names (default: all)\n    geo: Country code for regional trends\n    count: Number of results per source (default: 20)\n\nReturns:\n    JSON with trending results (snapshot saved to DB for velocity tracking)\n",
+      "inputSchema": {
+        "properties": {
+          "sources": {
+            "default": "",
+            "title": "Sources",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "count": {
+            "default": 20,
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "title": "take_snapshotArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetch selected sources and save their current results to local SQLite history.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 200))",
+        "sources is a comma-separated string; whitespace/empty items stripped; empty means all. Unknown names are skipped (trending reports errors)."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 120,
+          "end_line": 139,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L120-L139"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_content_brief",
+      "description": "Get a structured writing brief for creating viral content.\n\nReturns hook examples, patent strategies, scoring dimensions, platform specs,\nand content type guidance. Use this data to craft original posts — the LLM\ncreates the content, this tool provides the optimization framework.\n\nArgs:\n    topic: Subject to create content about (e.g. \"AI tools\", \"Claude Code\")\n    content_type: Post style — opinion, story, debate, howto, list, question, news, meme\n    platform: Target platform — threads (500 chars), instagram (2200), facebook (63206)\n    lang: Language — \"auto\" (detect from topic), \"en\", \"zh-TW\"\n\nReturns:\n    JSON with hook examples, CTA examples, patent strategies, scoring dimensions,\n    platform specs, content type guidance, char limit, and quality gate thresholds\n",
+      "inputSchema": {
+        "properties": {
+          "topic": {
+            "title": "Topic",
+            "type": "string"
+          },
+          "content_type": {
+            "default": "debate",
+            "title": "Content Type",
+            "type": "string"
+          },
+          "platform": {
+            "default": "threads",
+            "title": "Platform",
+            "type": "string"
+          },
+          "lang": {
+            "default": "auto",
+            "title": "Lang",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "title": "get_content_briefArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Return static writing frameworks, hooks, patent strategies and platform guidance, not generated content.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 147,
+          "end_line": 173,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L147-L173"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_scoring_guide",
+      "description": "Get the 5-dimension scoring framework for evaluating posts.\n\nReturns evaluation criteria, high/low signal examples, and grade thresholds\nfor each patent-derived dimension. The LLM uses this guide to score posts\nitself — no regex heuristics.\n\nDimensions (weighted):\n- Hook Power 25% (EdgeRank Weight + Andromeda)\n- Engagement Trigger 25% (Story-Viewer Tuple + Dear Algo)\n- Conversation Durability 20% (Threads 72hr window)\n- Velocity Potential 15% (Andromeda Real-time)\n- Format Score 15% (Multi-modal Indexing)\n\nArgs:\n    lang: Language for criteria text — \"auto\", \"en\", \"zh-TW\"\n    topic: Optional topic hint for auto language detection\n\nReturns:\n    JSON with 5 dimensions (weight, criteria, signals), grade thresholds, and instructions\n",
+      "inputSchema": {
+        "properties": {
+          "lang": {
+            "default": "auto",
+            "title": "Lang",
+            "type": "string"
+          },
+          "topic": {
+            "default": "",
+            "title": "Topic",
+            "type": "string"
+          }
+        },
+        "title": "get_scoring_guideArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Return static five-dimension evaluation criteria and grading instructions.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 176,
+          "end_line": 204,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L176-L204"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_platform_specs",
+      "description": "Get platform specifications for content adaptation.\n\nReturns character limits, content strengths, algorithm priorities,\nbest posting times, and format guidelines for each platform.\nUse this to adapt content for specific platforms.\n\nArgs:\n    platform: Platform name — threads, instagram, facebook (empty = all platforms)\n    lang: Language for descriptions — \"en\" or \"zh-TW\" (default: \"zh-TW\")\n\nReturns:\n    JSON with platform specs (char limits, strengths, format tips, algo priority, best times)\n",
+      "inputSchema": {
+        "properties": {
+          "platform": {
+            "default": "",
+            "title": "Platform",
+            "type": "string"
+          },
+          "lang": {
+            "default": "zh-TW",
+            "title": "Lang",
+            "type": "string"
+          }
+        },
+        "title": "get_platform_specsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Return platform specification data for one or all supported platforms.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 207,
+          "end_line": 228,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L207-L228"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_review_checklist",
+      "description": "Get a structured review checklist for evaluating content quality.\n\nReturns platform limits, quality thresholds, and detailed checklist items.\nThe LLM reviews the post against this checklist itself — the tool only\nprovides criteria, not judgment.\n\nChecklist covers:\n- Character limit compliance\n- Overall score quality gate (>= 70)\n- Conversation durability gate (>= 55)\n- Hook effectiveness\n- CTA presence\n- Question/engagement triggers\n- Format/readability\n\nArgs:\n    platform: Target platform — threads (500 chars), instagram (2200), facebook (63206)\n    lang: Language for checklist text — \"auto\", \"en\", \"zh-TW\"\n    topic: Optional topic hint for auto language detection\n\nReturns:\n    JSON with platform limits, quality gate thresholds, checklist items, and verdict rules\n",
+      "inputSchema": {
+        "properties": {
+          "platform": {
+            "default": "threads",
+            "title": "Platform",
+            "type": "string"
+          },
+          "lang": {
+            "default": "auto",
+            "title": "Lang",
+            "type": "string"
+          },
+          "topic": {
+            "default": "",
+            "title": "Topic",
+            "type": "string"
+          }
+        },
+        "title": "get_review_checklistArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Return static quality thresholds and content review criteria.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 231,
+          "end_line": 263,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L231-L263"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_reel_guide",
+      "description": "Get a structured guide for creating Reels/Short video scripts.\n\nReturns scene structure, timing allocations, visual guidance, and editing tips.\nThe LLM fills in original captions, voiceover, and visual directions.\n\nStyles: educational (problem→solution), storytelling (conflict→resolution),\nlisticle (numbered points)\n\nArgs:\n    style: Script style — educational, storytelling, listicle\n    duration: Target duration in seconds (default: 30)\n    lang: Language for guide text — \"auto\", \"en\", \"zh-TW\"\n    topic: Optional topic hint for auto language detection\n\nReturns:\n    JSON with scene structure, timing, music suggestion, editing tips, and instructions\n",
+      "inputSchema": {
+        "properties": {
+          "style": {
+            "default": "educational",
+            "title": "Style",
+            "type": "string"
+          },
+          "duration": {
+            "default": 30,
+            "title": "Duration",
+            "type": "integer"
+          },
+          "lang": {
+            "default": "auto",
+            "title": "Lang",
+            "type": "string"
+          },
+          "topic": {
+            "default": "",
+            "title": "Topic",
+            "type": "string"
+          }
+        },
+        "title": "get_reel_guideArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Return static scene structures and allocated timings for short-video scripts.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 266,
+          "end_line": 293,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L266-L293"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "render_page",
+      "description": "Render a JS-heavy page using Cloudflare Browser Rendering.\n\nRequires CF_ACCOUNT_ID and CF_API_TOKEN environment variables.\nReturns rendered page content in the requested format.\n\nArgs:\n    url: The page URL to render.\n    format: Output format — \"markdown\" (clean text), \"content\" (full HTML),\n            or \"json\" (AI structured extraction, returns raw page data).\n\nReturns:\n    JSON with url, format, and rendered content (or error message).\n",
+      "inputSchema": {
+        "properties": {
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "format": {
+            "default": "markdown",
+            "title": "Format",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "title": "render_pageArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Validate URL then use configured Cloudflare Browser Rendering to obtain markdown, HTML or structured JSON.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Only http/https; blocks literal private/loopback/link-local/multicast IPs. Arbitrary format strings fall back to markdown. Requires configured Cloudflare credentials at execution."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 301,
+          "end_line": 368,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L301-L368"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "search_semantic",
+      "description": "Semantic similarity search across trend sources.\n\nFetches trends from the specified sources, indexes them with TF-IDF, and\nreturns the k most semantically similar results to the query. Useful for\nfinding thematically related trends even when keywords don't match exactly.\n\nArgs:\n    query: Natural-language search query (e.g. \"machine learning tools\").\n    sources: Comma-separated source names (default: all).\n    geo: Country code for regional trends (e.g. TW, US).\n    count: Number of items to fetch per source before similarity ranking.\n    k: Number of results to return (default: 10).\n\nReturns:\n    JSON with ranked list of semantically similar TrendItems.\n",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "sources": {
+            "default": "",
+            "title": "Sources",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "count": {
+            "default": 20,
+            "title": "Count",
+            "type": "integer"
+          },
+          "k": {
+            "default": 10,
+            "title": "K",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_semanticArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetch live trends, construct local TF-IDF vector store, return similarity-ranked items.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 200))",
+        "sources is a comma-separated string; whitespace/empty items stripped; empty means all. Unknown names are skipped (trending reports errors)."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 376,
+          "end_line": 426,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L376-L426"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_trend_clusters",
+      "description": "Cluster trends from multiple sources into semantic topic groups.\n\nFetches trends, embeds them with TF-IDF, and groups similar items into\nTrendClusters. Cross-source clusters (same topic appearing in 2+ sources)\nare ranked highest — these are the most validated viral topics.\n\nArgs:\n    sources: Comma-separated source names (default: all).\n    geo: Country code for regional trends.\n    count: Items to fetch per source before clustering.\n    threshold: Cosine similarity threshold (0-1). Lower = larger clusters.\n               Default 0.25 is a good balance for short trend keywords.\n\nReturns:\n    JSON with clusters sorted by (cross_source desc, score desc).\n",
+      "inputSchema": {
+        "properties": {
+          "sources": {
+            "default": "",
+            "title": "Sources",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "count": {
+            "default": 20,
+            "title": "Count",
+            "type": "integer"
+          },
+          "threshold": {
+            "default": 0.25,
+            "title": "Threshold",
+            "type": "number"
+          }
+        },
+        "title": "get_trend_clustersArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetch live trends and group TF-IDF similar topics across sources.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 200))",
+        "sources is a comma-separated string; whitespace/empty items stripped; empty means all. Unknown names are skipped (trending reports errors)."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 429,
+          "end_line": 475,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L429-L475"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_lifecycle_prediction",
+      "description": "Predict the lifecycle stage of a trend keyword.\n\nQueries the local history DB for the keyword's score trajectory, then\npredicts whether it's emerging, at peak, declining, or fading.\n\nArgs:\n    keyword: The trend keyword to analyse.\n    days: How many days of history to include (default: 30).\n    source: Filter history by source name (default: all sources).\n\nReturns:\n    JSON with stage, current_score, velocity, history_count, and emoji.\n",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "title": "Keyword",
+            "type": "string"
+          },
+          "days": {
+            "default": 30,
+            "title": "Days",
+            "type": "integer"
+          },
+          "source": {
+            "default": "",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "get_lifecycle_predictionArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Predict lifecycle from chronological local snapshot scores; does not retrieve remote historical Google Trends data.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 478,
+          "end_line": 513,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L478-L513"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "list_sources_extended",
+      "description": "List all available trend sources with extended plugin metadata.\n\nReturns all built-in sources plus plugin sources with additional fields:\ncategory, frequency, plugin_version, difficulty, and dependencies.\n\nReturns:\n    JSON array of source info objects with full metadata.\n",
+      "inputSchema": {
+        "properties": {},
+        "title": "list_sources_extendedArguments",
+        "type": "object"
+      },
+      "domain": "server-management",
+      "behavior": "Enrich instantiated source metadata with optional plugin properties.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 516,
+          "end_line": 545,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L516-L545"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "run_content_workflow",
+      "description": "Run the full 6-agent content workflow to auto-generate viral posts.\n\nExecutes a multi-agent pipeline: researcher → strategist → copywriter →\noptimizer → compliance checker → distributor. Returns platform-ready content\nfor all specified platforms.\n\nAgents:\n1. Researcher: selects top trends relevant to the topic\n2. Strategist: generates 3 content angles / hooks\n3. Copywriter: drafts platform-specific posts\n4. Optimizer: creates A/B variants and scores them\n5. Compliance: flags spammy language (reduces score)\n6. Distributor: picks best variant per platform\n\nArgs:\n    topic: Content topic / keyword (e.g. \"AI agents\", \"Claude Code\").\n    platforms: Comma-separated platform names\n               (threads, x, instagram, linkedin, tiktok, youtube, xiaohongshu, facebook).\n    brand_voice: Tone — \"casual\", \"professional\", \"provocative\", \"educational\".\n    sources: Comma-separated trend source names to fetch context from (default: all).\n    geo: Country code for trend context (e.g. TW, US).\n    count: Items to fetch per source for trend context (default: 20).\n\nReturns:\n    JSON with final_content (platform→text), strategy, scored_drafts, and any errors.\n",
+      "inputSchema": {
+        "properties": {
+          "topic": {
+            "title": "Topic",
+            "type": "string"
+          },
+          "platforms": {
+            "default": "threads",
+            "title": "Platforms",
+            "type": "string"
+          },
+          "brand_voice": {
+            "default": "casual",
+            "title": "Brand Voice",
+            "type": "string"
+          },
+          "sources": {
+            "default": "",
+            "title": "Sources",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "count": {
+            "default": 20,
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "title": "run_content_workflowArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Fetch trend context, then run six sequential Python template/heuristic workflow stages to draft and score platform posts.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 200))",
+        "sources is a comma-separated string; whitespace/empty items stripped; empty means all. Unknown names are skipped (trending reports errors)."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 553,
+          "end_line": 628,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L553-L628"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_ab_variants",
+      "description": "Generate A/B content variants for testing different approaches.\n\nCreates multiple variants of the input content by applying different\nmutation strategies: emoji boost, question hook, urgency framing, etc.\nEach variant is scored with the heuristic engine.\n\nArgs:\n    content: Original post text to create variants from.\n    platform: Target platform for char-limit compliance (default: threads).\n    count: Number of variants to generate (1-5, default: 3).\n\nReturns:\n    JSON with original + variant posts, scores, and recommended pick.\n",
+      "inputSchema": {
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "platform": {
+            "default": "threads",
+            "title": "Platform",
+            "type": "string"
+          },
+          "count": {
+            "default": 3,
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "title": "get_ab_variantsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Apply up to five fixed text mutations, truncate to platform limit, score original and variants.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 5))",
+        "Implementation: best = max(variants, key=lambda v: v[\"score\"])"
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 631,
+          "end_line": 695,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L631-L695"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "score_content_hybrid",
+      "description": "Score content using the Hybrid Scoring 2.0 engine.\n\nApplies L1 heuristic analysis (always available) + L2 LLM judge\n(requires ANTHROPIC_API_KEY) + L3 RAG history bonus if history exists.\n\nScoring dimensions (weights):\n- Hook Power 25%: Opening line strength, emoji, question words\n- Engagement Trigger 25%: CTA presence, debate language\n- Conversation Durability 20%: Length, depth, substance\n- Velocity Potential 15%: Trending keywords alignment\n- Format Score 15%: Char limit compliance, readability\n\nArgs:\n    content: Post text to evaluate.\n    platform: Target platform for format scoring\n              (threads, x, instagram, linkedin, tiktok, youtube, xiaohongshu, facebook).\n\nReturns:\n    JSON with total score (0-100), grade, dimension breakdown, mode, and signals.\n",
+      "inputSchema": {
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "platform": {
+            "default": "threads",
+            "title": "Platform",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "title": "score_content_hybridArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Apply heuristic scoring and optional Anthropic LLM judge; wrapper supplies no history keywords, so advertised RAG history bonus is not enabled here.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 698,
+          "end_line": 726,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L698-L726"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_campaign_calendar",
+      "description": "Generate a content calendar for multiple topics over N days.\n\nPlans one post per topic per day, distributing across platforms and\nvarying content angles to avoid repetition. Uses the strategy layer\nto assign angles and the platform adapter for format guidance.\n\nArgs:\n    topics: Comma-separated topic list (e.g. \"AI tools,Python,Claude Code\").\n    days: Number of days to plan (1-30, default: 7).\n    platforms: Comma-separated target platforms (default: threads).\n    brand_voice: Tone — \"casual\", \"professional\", \"provocative\", \"educational\".\n\nReturns:\n    JSON calendar with day-by-day posting plan.\n",
+      "inputSchema": {
+        "properties": {
+          "topics": {
+            "title": "Topics",
+            "type": "string"
+          },
+          "days": {
+            "default": 7,
+            "title": "Days",
+            "type": "integer"
+          },
+          "platforms": {
+            "default": "threads",
+            "title": "Platforms",
+            "type": "string"
+          },
+          "brand_voice": {
+            "default": "casual",
+            "title": "Brand Voice",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topics"
+        ],
+        "title": "get_campaign_calendarArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Cycle topics, platforms and fixed angle templates over days; one calendar entry per day, rather than one per topic per day as description claims.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: days = max(1, min(days, 30))",
+        "Empty parsed topic list returns error; empty platform list falls back to threads."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 729,
+          "end_line": 789,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L729-L789"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_trend_report",
+      "description": "Generate an automated trend intelligence report.\n\nFetches trends, clusters them, predicts lifecycle stages, and assembles a\nstructured report showing what's emerging, peaking, and fading across sources.\n\nArgs:\n    period: Number of days of history to include for lifecycle context (default: 7).\n    sources: Comma-separated source names (default: all).\n    geo: Country code filter (e.g. TW, US).\n    count: Items per source to include (default: 20).\n\nReturns:\n    JSON report with executive summary, top trends, cross-source clusters,\n    and lifecycle breakdown (emerging/peak/declining/fading counts).\n",
+      "inputSchema": {
+        "properties": {
+          "period": {
+            "default": 7,
+            "title": "Period",
+            "type": "integer"
+          },
+          "sources": {
+            "default": "",
+            "title": "Sources",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "count": {
+            "default": 20,
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "title": "get_trend_reportArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetch current trends, cluster them and consult local history for lifecycle summary and top items.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 200))",
+        "sources is a comma-separated string; whitespace/empty items stripped; empty means all. Unknown names are skipped (trending reports errors)."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 797,
+          "end_line": 879,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L797-L879"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "compare_trends",
+      "description": "Compare two trend keywords side-by-side.\n\nLooks up history for both keywords and computes momentum, average score,\npeak score, and lifecycle stage for each. Returns a head-to-head comparison.\n\nArgs:\n    keyword_a: First keyword to compare.\n    keyword_b: Second keyword to compare.\n    days: Days of history to query (default: 30).\n\nReturns:\n    JSON with side-by-side comparison of both keywords.\n",
+      "inputSchema": {
+        "properties": {
+          "keyword_a": {
+            "title": "Keyword A",
+            "type": "string"
+          },
+          "keyword_b": {
+            "title": "Keyword B",
+            "type": "string"
+          },
+          "days": {
+            "default": 30,
+            "title": "Days",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword_a",
+          "keyword_b"
+        ],
+        "title": "compare_trendsArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Compare local history scores, peaks, average and mean change per record for two partial keyword matches.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: peak = max(scores, default=0.0)"
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 882,
+          "end_line": 935,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L882-L935"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "export_data",
+      "description": "Export trend data in JSON or CSV format.\n\nFetches live trends and formats them for export. Useful for feeding into\nspreadsheets, BI tools, or external analysis pipelines.\n\nArgs:\n    format: Output format — \"json\" (structured) or \"csv\" (comma-separated).\n    sources: Comma-separated source names (default: all).\n    geo: Country code filter.\n    count: Items per source (default: 50).\n\nReturns:\n    JSON or CSV string with trend data.\n",
+      "inputSchema": {
+        "properties": {
+          "format": {
+            "default": "json",
+            "title": "Format",
+            "type": "string"
+          },
+          "sources": {
+            "default": "",
+            "title": "Sources",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "count": {
+            "default": 50,
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "title": "export_dataArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetch live trends, flatten and sort scores, return JSON object containing rows or CSV text.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 200))",
+        "sources is a comma-separated string; whitespace/empty items stripped; empty means all. Unknown names are skipped (trending reports errors)."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 938,
+          "end_line": 998,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L938-L998"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "send_notification",
+      "description": "Send a trend alert notification to a configured channel.\n\nRequires the channel's credentials to be set as environment variables.\nChannels: discord, telegram, webhook, line, email.\n\nEnvironment variables:\n- discord:  DISCORD_WEBHOOK_URL\n- telegram: TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID\n- webhook:  GENERIC_WEBHOOK_URL\n- line:     LINE_NOTIFY_TOKEN\n- email:    SMTP_HOST + SMTP_USER + SMTP_PASS + SMTP_FROM + SMTP_TO\n\nArgs:\n    channel: Channel name — \"discord\", \"telegram\", \"webhook\", \"line\", or \"email\".\n    title: Notification title.\n    message: Notification body text.\n\nReturns:\n    JSON with success status and channel used.\n",
+      "inputSchema": {
+        "properties": {
+          "channel": {
+            "title": "Channel",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "channel",
+          "title",
+          "message"
+        ],
+        "title": "send_notificationArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Send title/body through selected configured notification channel.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 1001,
+          "end_line": 1044,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L1001-L1044"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "adapt_content",
+      "description": "Adapt content from one platform format to another.\n\nRewrites the post to fit the target platform's char limit, tone, and\nbest-practices (e.g. Threads→X requires tightening to 280 chars;\nThreads→LinkedIn requires adding professional framing).\n\nArgs:\n    content: Original post text.\n    from_platform: Source platform (threads, instagram, facebook, x, linkedin,\n                   tiktok, youtube, xiaohongshu).\n    to_platform: Target platform.\n\nReturns:\n    JSON with adapted content, char counts before/after, and platform specs.\n",
+      "inputSchema": {
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "from_platform": {
+            "default": "threads",
+            "title": "From Platform",
+            "type": "string"
+          },
+          "to_platform": {
+            "default": "x",
+            "title": "To Platform",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "title": "adapt_contentArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Prepend target-specific opener, truncate, add LinkedIn line breaks and score; no general semantic rewriting.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 1053,
+          "end_line": 1108,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L1053-L1108"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "analyze_viral_factors",
+      "description": "Deep analysis of what makes (or doesn't make) content go viral.\n\nBreaks down the post across 5 patent-derived dimensions with specific\nper-signal feedback and actionable improvement suggestions.\n\nArgs:\n    content: Post text to analyse.\n    platform: Target platform (affects char-limit and format scoring).\n\nReturns:\n    JSON with dimension scores, per-signal breakdown, strengths,\n    weaknesses, and top 3 improvement suggestions.\n",
+      "inputSchema": {
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "platform": {
+            "default": "threads",
+            "title": "Platform",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "title": "analyze_viral_factorsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Score content, compute regex signals and return heuristic suggestions and strengths/weaknesses.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 1111,
+          "end_line": 1167,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L1111-L1167"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "generate_hashtags",
+      "description": "Generate optimized hashtags for a topic and platform.\n\nReturns a ranked list of hashtags based on topic relevance and\nplatform-specific best practices (e.g. LinkedIn prefers 3-5 tags,\nInstagram up to 30, TikTok 3-7 challenge-style tags).\n\nArgs:\n    topic: Content topic or keyword (e.g. \"AI agents\", \"Python tutorial\").\n    platform: Target platform — affects volume and style recommendations.\n    count: Number of hashtags to generate (1-30, default: 10).\n    lang: Language hint — \"en\" or \"zh-TW\" (for Chinese topics).\n\nReturns:\n    JSON with hashtag list, platform recommendation, and usage tips.\n",
+      "inputSchema": {
+        "properties": {
+          "topic": {
+            "title": "Topic",
+            "type": "string"
+          },
+          "platform": {
+            "default": "threads",
+            "title": "Platform",
+            "type": "string"
+          },
+          "count": {
+            "default": 10,
+            "title": "Count",
+            "type": "integer"
+          },
+          "lang": {
+            "default": "en",
+            "title": "Lang",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "title": "generate_hashtagsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Construct topic-word hashtags and fixed context tags, deduplicate and truncate; no live popularity lookup.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: count = max(1, min(count, 30))"
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 1170,
+          "end_line": 1251,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L1170-L1251"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_source_status",
+      "description": "Check health status of all registered trend sources.\n\nPerforms a lightweight ping to verify each source is reachable and\nreturning data. Useful for debugging which sources are failing.\n\nReturns:\n    JSON with per-source status (ok / error / skipped) and summary counts.\n",
+      "inputSchema": {
+        "properties": {},
+        "title": "get_source_statusArguments",
+        "type": "object"
+      },
+      "domain": "server-management",
+      "behavior": "Concurrently call fetch_trending(count=1) for instantiated sources with ten-second timeouts.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 1254,
+          "end_line": 1301,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L1254-L1301"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_trend_velocity",
+      "description": "Get real-time velocity and momentum for a trend keyword.\n\nQueries recent history to compute how fast the keyword is rising or falling.\nReturns velocity (score change per hour), acceleration, and projected\nscore in the next 6 and 24 hours.\n\nArgs:\n    keyword: Trend keyword to analyse.\n    hours: Lookback window in hours (1-168, default: 24).\n    source: Filter by source name (default: all sources).\n\nReturns:\n    JSON with velocity, acceleration, trend_direction, and projections.\n",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "title": "Keyword",
+            "type": "string"
+          },
+          "hours": {
+            "default": 24,
+            "title": "Hours",
+            "type": "integer"
+          },
+          "source": {
+            "default": "",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "get_trend_velocityArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Read local snapshots and compute mean change per record and acceleration; hours is converted to day window, not exact hourly filtering, and velocity is not time-normalized.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "Implementation: hours = max(1, min(hours, 168))  # clamp to 1h–7d",
+        "Implementation: days = max(1, min(hours // 24 + 1, 30))",
+        "Implementation: mid = max(1, len(deltas) // 2)",
+        "Implementation: proj_6h = max(0.0, min(100.0, current + velocity * 0.25))",
+        "Implementation: proj_24h = max(0.0, min(100.0, current + velocity))"
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 1304,
+          "end_line": 1377,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L1304-L1377"
+        },
+        {
+          "path": "src/trend_pulse/sources/google_trends.py",
+          "start_line": 12,
+          "end_line": 78,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/sources/google_trends.py#L12-L78"
+        },
+        {
+          "path": "src/trend_pulse/aggregator.py",
+          "start_line": 55,
+          "end_line": 191,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/aggregator.py#L55-L191"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "batch_score_content",
+      "description": "Score multiple posts at once using the Hybrid Scoring 2.0 engine.\n\nAccepts a JSON array of post strings and returns a scored ranking.\nUseful for comparing multiple drafts before publishing.\n\nArgs:\n    contents: JSON array of post strings, e.g. [\"Post A text\", \"Post B text\"].\n              Max 10 posts per batch.\n    platform: Target platform for format scoring (default: threads).\n\nReturns:\n    JSON with ranked list of posts by score, including dimension breakdowns.\n",
+      "inputSchema": {
+        "properties": {
+          "contents": {
+            "title": "Contents",
+            "type": "string"
+          },
+          "platform": {
+            "default": "threads",
+            "title": "Platform",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contents"
+        ],
+        "title": "batch_score_contentArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Parse contents string as JSON list, retain first ten entries, ignore nonstrings, score concurrently and rank successes.",
+      "validation_notes": [
+        "All inputs use plain scalar annotations; documented choices/ranges are not JSON Schema enums or bounds.",
+        "contents remains string schema, not array; decoded value must be a list; first ten entries considered, nonstrings skipped; score exceptions omitted."
+      ],
+      "sources": [
+        {
+          "path": "src/trend_pulse/server.py",
+          "start_line": 1380,
+          "end_line": 1435,
+          "url": "https://github.com/claude-world/trend-pulse/blob/d8e5fdbcf42cc02d0149ecb2b4ab1a93430c654e/src/trend_pulse/server.py#L1380-L1435"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

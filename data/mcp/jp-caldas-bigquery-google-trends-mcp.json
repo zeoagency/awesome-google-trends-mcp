@@ -1,0 +1,202 @@
+{
+  "repo": "jp-caldas/bigquery-google-trends-mcp",
+  "slug": "jp-caldas-bigquery-google-trends-mcp",
+  "commit": "55fa5a3941e5c45a143f1b056b63d086b2df1db3",
+  "source_url": "https://github.com/jp-caldas/bigquery-google-trends-mcp",
+  "subdirectory": null,
+  "extraction_method": "AST selected all @mcp.tool() wrapper definitions from server.py unchanged and executed their registrations in an isolated FastMCP instance; called local list_tools() with repository-locked mcp 1.28.1 and Pydantic 2.13.4. No wrapper body, repository startup/config import, credential read, client creation, or remote tool call executed. Inspected complete source tree for registrations and implementations.",
+  "limitations": [
+    "Runtime BigQuery execution and dataset availability were not tested. Local introspection bypasses lifespan/imports intentionally; registration definitions and annotations are executed unchanged.",
+    "Project permits broad dependency versions; schemas are verified against its uv.lock versions, not every permitted version."
+  ],
+  "recommendation": "include",
+  "reason": "All three unconditionally registered Google Trends tools have complete locally verified input schemas and implemented BigQuery queries.",
+  "tools": [
+    {
+      "name": "buscar_termos_em_alta_tool",
+      "description": "",
+      "inputSchema": {
+        "properties": {
+          "pais": {
+            "title": "Pais",
+            "type": "string"
+          },
+          "data_limite": {
+            "title": "Data Limite",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pais",
+          "data_limite"
+        ],
+        "title": "buscar_termos_em_alta_toolArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Queries bigquery-public-data.google_trends.international_top_terms for a country with week >= data_limite, ordered by newest week then ascending rank. Returns term, nullable score, and rank for each row; no result limit or deduplication.",
+      "validation_notes": [
+        "Implementation uppercases pais, then restricts it to AU, BR, CA, DE, ES, FR, GB, IN, JP, US; this restriction is not an input-schema enum.",
+        "All input fields are required strings with no defaults, nullable variants, bounds, patterns, or date formats in the schema. additionalProperties is unspecified.",
+        "Dates are not parsed or validated locally. They are passed as STRING BigQuery query parameters, and any query/type/date failure becomes BigQueryError.",
+        "An initialized BigQuery client is required for execution; startup validates GOOGLE_CLOUD_PROJECT and creates an ADC-authenticated client. No client or server context is caller-supplied.",
+        "No rows yields an empty list."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_google_trends/server.py",
+          "start_line": 36,
+          "end_line": 38,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/server.py#L36-L38"
+        },
+        {
+          "path": "src/mcp_google_trends/tools.py",
+          "start_line": 47,
+          "end_line": 61,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/tools.py#L47-L61"
+        },
+        {
+          "path": "src/mcp_google_trends/tools.py",
+          "start_line": 9,
+          "end_line": 19,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/tools.py#L9-L19"
+        },
+        {
+          "path": "src/mcp_google_trends/bigquery_client.py",
+          "start_line": 6,
+          "end_line": 35,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/bigquery_client.py#L6-L35"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "buscar_termos_emergentes_tool",
+      "description": "",
+      "inputSchema": {
+        "properties": {
+          "pais": {
+            "title": "Pais",
+            "type": "string"
+          },
+          "data_limite": {
+            "title": "Data Limite",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pais",
+          "data_limite"
+        ],
+        "title": "buscar_termos_emergentes_toolArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Queries bigquery-public-data.google_trends.international_top_rising_terms for a country with week >= data_limite, ordered by descending percent_gain. Returns term, percent_gain, and nullable score; no result limit or deduplication.",
+      "validation_notes": [
+        "Implementation uppercases pais, then restricts it to AU, BR, CA, DE, ES, FR, GB, IN, JP, US; this restriction is not an input-schema enum.",
+        "All input fields are required strings with no defaults, nullable variants, bounds, patterns, or date formats in the schema. additionalProperties is unspecified.",
+        "Dates are not parsed or validated locally. They are passed as STRING BigQuery query parameters, and any query/type/date failure becomes BigQueryError.",
+        "An initialized BigQuery client is required for execution; startup validates GOOGLE_CLOUD_PROJECT and creates an ADC-authenticated client. No client or server context is caller-supplied.",
+        "No rows yields an empty list."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_google_trends/server.py",
+          "start_line": 41,
+          "end_line": 45,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/server.py#L41-L45"
+        },
+        {
+          "path": "src/mcp_google_trends/tools.py",
+          "start_line": 64,
+          "end_line": 78,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/tools.py#L64-L78"
+        },
+        {
+          "path": "src/mcp_google_trends/tools.py",
+          "start_line": 9,
+          "end_line": 19,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/tools.py#L9-L19"
+        },
+        {
+          "path": "src/mcp_google_trends/bigquery_client.py",
+          "start_line": 6,
+          "end_line": 35,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/bigquery_client.py#L6-L35"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "comparar_termo_tool",
+      "description": "",
+      "inputSchema": {
+        "properties": {
+          "termo": {
+            "title": "Termo",
+            "type": "string"
+          },
+          "pais": {
+            "title": "Pais",
+            "type": "string"
+          },
+          "data_inicio": {
+            "title": "Data Inicio",
+            "type": "string"
+          },
+          "data_fim": {
+            "title": "Data Fim",
+            "type": "string"
+          }
+        },
+        "required": [
+          "termo",
+          "pais",
+          "data_inicio",
+          "data_fim"
+        ],
+        "title": "comparar_termo_toolArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Queries bigquery-public-data.google_trends.international_top_terms for one case-insensitively matched term and country, with week BETWEEN data_inicio AND data_fim, ordered by ascending week. Returns week, term, nullable score, and rank. Despite its name it does not compare multiple terms.",
+      "validation_notes": [
+        "Implementation uppercases pais, then restricts it to AU, BR, CA, DE, ES, FR, GB, IN, JP, US; this restriction is not an input-schema enum.",
+        "All input fields are required strings with no defaults, nullable variants, bounds, patterns, or date formats in the schema. additionalProperties is unspecified.",
+        "Dates are not parsed or validated locally. They are passed as STRING BigQuery query parameters, and any query/type/date failure becomes BigQueryError.",
+        "An initialized BigQuery client is required for execution; startup validates GOOGLE_CLOUD_PROJECT and creates an ADC-authenticated client. No client or server context is caller-supplied.",
+        "No rows yields an empty list.",
+        "termo is lowercased before exact SQL equality; there is no empty-term or date-order validation. SQL BETWEEN includes both endpoints."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_google_trends/server.py",
+          "start_line": 48,
+          "end_line": 55,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/server.py#L48-L55"
+        },
+        {
+          "path": "src/mcp_google_trends/tools.py",
+          "start_line": 81,
+          "end_line": 107,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/tools.py#L81-L107"
+        },
+        {
+          "path": "src/mcp_google_trends/tools.py",
+          "start_line": 9,
+          "end_line": 19,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/tools.py#L9-L19"
+        },
+        {
+          "path": "src/mcp_google_trends/bigquery_client.py",
+          "start_line": 6,
+          "end_line": 35,
+          "url": "https://github.com/jp-caldas/bigquery-google-trends-mcp/blob/55fa5a3941e5c45a143f1b056b63d086b2df1db3/src/mcp_google_trends/bigquery_client.py#L6-L35"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

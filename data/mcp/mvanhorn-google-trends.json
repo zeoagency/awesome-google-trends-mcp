@@ -1,0 +1,2767 @@
+{
+  "repo": "mvanhorn/printing-press-library",
+  "slug": "mvanhorn-google-trends",
+  "commit": "985f5d7cc305b38b501c1e6302ac731a38eac503",
+  "source_url": "https://github.com/mvanhorn/printing-press-library",
+  "subdirectory": "library/marketing/google-trends",
+  "extraction_method": "Built actual Google Trends MCP main with pinned Go dependencies and requested local stdio initialize + tools/list only. Preserved all 27 returned descriptions and input schemas verbatim; inspected fixed registration, runtime Cobra walker and handlers. Raw response saved under subtree audit-tools-list.json.",
+  "limitations": [
+    "No remote tool calls or live Google Trends functionality tested. Runtime schemas verified locally; command mirrors require separately installed companion CLI.",
+    "Registered import always errors; workflow_archive resources list and default sync resources are empty. Parent tools trends/trends_history/workflow return guidance.",
+    "Descriptions/defaults may overstate generic sync and archival support; context tool_count=6 is not actual registered count."
+  ],
+  "recommendation": "include",
+  "reason": "Complete actual tools/list schemas verified for 27 registered tools, including 19 Google Trends domain tools; unsupported/no-op command mirrors explicitly identified.",
+  "tools": [
+    {
+      "name": "context",
+      "description": "Get API domain context: resource taxonomy, auth requirements, query tips, and unique capabilities. Call this first.",
+      "inputSchema": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "domain": "server-management",
+      "behavior": "Returns static API taxonomy, auth requirements, query tips, filesystem directory paths, and command-mirror capabilities; tool_count=6 describes endpoints rather than actual 27-tool surface.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "import",
+      "description": "google-trends has no create/upsert endpoints to import into — every\nendpoint in this API is read-only. This command always returns a usage error.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "resource": {
+            "description": "Positional argument <resource>",
+            "type": "string"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "resource"
+        ],
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Registered but unsupported: always returns a usage error because this API has no importable resources.",
+      "validation_notes": [
+        "Cobra requires exactly one resource argument; every resource is rejected.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/import.go",
+          "start_line": 1,
+          "end_line": 33,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/import.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true,
+      "implementation_status": "unsupported"
+    },
+    {
+      "name": "search",
+      "description": "Full-text search across all synced data. Faster than paginating list endpoints. Requires sync first.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "description": "Max results (default 25)",
+            "type": "number"
+          },
+          "query": {
+            "description": "Search query (supports FTS5 syntax: AND, OR, NOT, quotes for phrases)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Runs FTS5 search against existing local SQLite resources and returns bounded results plus store status.",
+      "validation_notes": [
+        "Implementation requires nonempty string query. Limit defaults to 25 when missing or nonpositive; positive numeric value is truncated to int. Schema has no default or bounds."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "sql",
+      "description": "Run read-only SQL against local database. Use for ad-hoc analysis, aggregations, and joins across synced resources. Requires sync first.",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "description": "SQL query (SELECT or WITH...SELECT). Synced records live in resources(resource_type, id, data); filter by resource_type and use json_extract on data, e.g. SELECT json_extract(data,'$.name') FROM resources WHERE resource_type='trends'.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Runs one read-only SELECT or WITH statement against existing local SQLite resources and returns rows, columns, count and store status.",
+      "validation_notes": [
+        "Implementation requires nonempty query and rejects multiple statements and leading keywords other than SELECT/WITH; SQLite store is opened read-only."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "sync",
+      "description": "Sync data from the API into a local SQLite database. This API does\nnot declare temporal sync filters, so sync performs full pagination unless an\nexplicit resource declares its own incremental filter.\nOnce synced, use the 'search' command for instant full-text search.\n\nExit codes & warnings:\n  Resources the API denies access to (HTTP 403, or HTTP 400 with an\n  access-policy body) are reported as warnings rather than failing the\n  run. In --json mode each is emitted as a {\"event\":\"sync_warning\",...}\n  line carrying status, reason, and message fields, and a final\n  {\"event\":\"sync_summary\",...} aggregates the run.\n\n  Exit 0 when at least one resource synced and no resource flagged in\n  the spec as critical (x-critical: true) failed; non-critical failures\n  emit {\"event\":\"sync_warning\",\"reason\":\"exit_policy_default_changed\",\n  ...} so callers can detect that a partial failure was tolerated. Pass\n  --strict to exit non-zero on any per-resource failure. Exit is always\n  non-zero when every selected resource failed, regardless of --strict.\n\nResource scoping:\n  --resources runs the named top-level resources, plus any parent-keyed\n  dependent whose own name is listed OR whose parent table is listed.\n  Naming a parent therefore cascades to its dependents (so \"sync this\n  parent and its children\" works without listing every nested resource\n  by hand). There is no flag today to suppress the cascade for a named\n  parent. To run a dependent without re-syncing its parent, list only\n  the dependent by name; the parent table must already be populated\n  from a prior sync.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "concurrency": {
+            "description": "Number of parallel sync workers (default: 4)",
+            "type": "number"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "db": {
+            "description": "SQLite database file path (default: resolved data directory data.db)",
+            "type": "string"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "full": {
+            "description": "Full resync (ignore previous checkpoint) (default: false)",
+            "type": "boolean"
+          },
+          "global-param": {
+            "description": "Extra query param to inject into every sync request including dependent path-scoped calls (repeatable, key=value). Use when an API requires a scope on every call regardless of path nesting.",
+            "type": "string"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "latest-only": {
+            "description": "Refresh head of each resource only; clears resume cursor and caps pages at 1. Mutually exclusive with --since (--since wins). (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "max-pages": {
+            "description": "Maximum pages to fetch per resource (0 = unlimited; cap-hit emits a sync_warning event) (default: 0)",
+            "type": "number"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "no-prune": {
+            "description": "Disable deletion reconciliation on --full (by default a full sync prunes local rows the API no longer returns for a fully-enumerated parent partition) (default: false)",
+            "type": "boolean"
+          },
+          "param": {
+            "description": "Extra query param to inject into flat-list sync requests (repeatable, key=value). Skipped on path-scoped dependent requests so a top-level scope like workspace=<id> does not double up on /parents/<id>/children calls. Use --global-param to inject everywhere. Avoid pagination keys (limit/since/cursor) — overriding them corrupts resume state.",
+            "type": "string"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "resource-param": {
+            "description": "Per-resource extra query param (repeatable, resource:key=value). Wins over --param and --global-param when keys conflict.",
+            "type": "string"
+          },
+          "resources": {
+            "description": "Comma-separated resource types to sync. Naming a parent also runs its parent-keyed dependents (see Long help for scoping).",
+            "type": "string"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "since": {
+            "description": "Incremental sync duration (e.g. 7d, 24h, 1w, 30m)",
+            "type": "string"
+          },
+          "strict": {
+            "description": "Exit non-zero on any per-resource failure (default: only critical failures or all-resource failure exit non-zero). (default: false)",
+            "type": "boolean"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Generic API-to-SQLite sync. Default sync resource list is empty, so default invocation emits no_bulk_list_endpoints warning and syncs zero resources; explicit resources take generated sync path. Explicit trends target uses GET /trends/api/widgetdata/relatedsearches and needs caller-supplied widget token/request parameters; generic sync is not keyword orchestration.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/sync.go",
+          "start_line": 1,
+          "end_line": 2033,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/sync.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true,
+      "implementation_status": "requires-explicit-resources"
+    },
+    {
+      "name": "trends",
+      "description": "Core Google Trends explore/widget flow.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Parent command returns subcommand guidance, no Trends query.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends.go",
+          "start_line": 1,
+          "end_line": 40,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true,
+      "implementation_status": "guidance-only"
+    },
+    {
+      "name": "trends_changes",
+      "description": "See exactly what changed for a keyword's related terms and interest score since your last sync.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "keyword": {
+            "description": "Positional argument <keyword>",
+            "type": "string"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "since": {
+            "description": "Compare against the most recent sync at least this long ago (e.g. 7d, 24h); default 7d",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Reads cached related terms and interest points and compares latest snapshots to an older cutoff; history depends on retained local snapshots.",
+      "validation_notes": [
+        "since is parsed by ParseDurationLoose; empty defaults to 7d.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_changes.go",
+          "start_line": 1,
+          "end_line": 241,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_changes.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_explore",
+      "description": "Requests per-widget tokens for a comparison of up to 5 keywords. Response's ['widgets'] array yields {id, token, request} for TIMESERIES, GEO_MAP, and RELATED_QUERIES/TOPICS widgets. Required: hl, tz, req. Returns the new explore.",
+      "inputSchema": {
+        "properties": {
+          "hl": {
+            "description": "UI/response language, e.g. en-US",
+            "type": "string"
+          },
+          "req": {
+            "description": "JSON-encoded object: {'comparisonItem':[{'keyword':str,'geo':str,'time':str}, ...",
+            "type": "string"
+          },
+          "tz": {
+            "description": "Timezone offset in minutes (e.g. 420 for PDT)",
+            "type": "number"
+          }
+        },
+        "required": [
+          "hl",
+          "tz",
+          "req"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Generic MCP HTTP handler sends POST /trends/api/explore, binds named parameters into query/form fields and returns bounded response.",
+      "validation_notes": [
+        "req, where present, is a JSON-encoded string: MCP schema does not expose nested comparison/widget schema or validate JSON locally; generic handler forwards values. Required fields are schema requirements, handler itself skips missing bindings. Extra arguments are forwarded despite no additionalProperties constraint."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_geo_gap",
+      "description": "Ranks the regions where two keywords' interest diverges most",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "category": {
+            "description": "Google Trends category ID (default: 0)",
+            "type": "number"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "geo": {
+            "description": "Restrict comparison to this geo (default: worldwide)",
+            "type": "string"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "keywordA": {
+            "description": "Positional argument <keywordA>",
+            "type": "string"
+          },
+          "keywordB": {
+            "description": "Positional argument <keywordB>",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Maximum number of regions to return (default: 15)",
+            "type": "number"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "resolution": {
+            "description": "Geo resolution: COUNTRY, REGION, DMA, or CITY (best-effort — patches the widget's own request if present)",
+            "type": "string"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeframe": {
+            "description": "Time range, e.g. 'today 12-m' (default: today 12-m)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keywordA",
+          "keywordB"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Explore plus GEO_MAP request for two keywords; ranks regions by absolute interest delta.",
+      "validation_notes": [
+        "Requires two keyword positionals. Resolution override is best-effort only; positive limit truncates output, nonpositive limit leaves all regions.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_geo_gap.go",
+          "start_line": 1,
+          "end_line": 103,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_geo_gap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/gtrends/explore.go",
+          "start_line": 1,
+          "end_line": 340,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/gtrends/explore.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_history",
+      "description": "history subcommands: search",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Parent command returns subcommand guidance, no history query.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_history.go",
+          "start_line": 1,
+          "end_line": 21,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_history.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true,
+      "implementation_status": "guidance-only"
+    },
+    {
+      "name": "trends_history_search",
+      "description": "Full-text search across every related-term and trending-topic result you've ever synced, offline.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "limit": {
+            "description": "Maximum results to return (default: 20)",
+            "type": "number"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "query": {
+            "description": "Positional argument <query>",
+            "type": "string"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "table": {
+            "description": "Restrict search to one table: related, trending (default: both)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "FTS5 search of cached related terms and trending topics, with optional table filtering.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings.",
+        "table implementation accepts empty, all, related, trending; JSON Schema has no enum."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_history_search.go",
+          "start_line": 1,
+          "end_line": 97,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_history_search.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_interest",
+      "description": "Interest-over-time for a keyword, optionally compared against up to 4 others.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "category": {
+            "description": "Google Trends category ID (default: 0)",
+            "type": "number"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "compare": {
+            "description": "Comma-separated additional keywords to compare (up to 4 more, 5 total)",
+            "type": "string"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "geo": {
+            "description": "Geo code (e.g. US); default: worldwide",
+            "type": "string"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "keyword": {
+            "description": "Positional argument <keyword>",
+            "type": "string"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "property": {
+            "description": "Search property: '' (web), images, news, youtube, froogle",
+            "type": "string"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeframe": {
+            "description": "Time range, e.g. 'today 12-m', 'now 7-d' (default: today 12-m)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Explore plus TIMESERIES request for one keyword and up to four comparison keywords; persists interest points and tracked query metadata locally.",
+      "validation_notes": [
+        "Implementation splits compare string on commas and rejects more than 5 total keywords; schema has no maxItems or bound.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_interest.go",
+          "start_line": 1,
+          "end_line": 137,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_interest.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/gtrends/explore.go",
+          "start_line": 1,
+          "end_line": 340,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/gtrends/explore.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_opportunities",
+      "description": "Ranks a keyword's related/rising terms by rising-momentum times parent-topic growth",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "keyword": {
+            "description": "Positional argument <keyword>",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Maximum number of opportunities to return (default: 10)",
+            "type": "number"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Ranks latest cached rising terms using rising momentum and normalized parent interest slope.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_opportunities.go",
+          "start_line": 1,
+          "end_line": 140,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_opportunities.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_pickers_category",
+      "description": "Full category id-to-name lookup tree. Openly accessible, no clearance cookie required. Required: hl, tz. Returns the category. (public)",
+      "inputSchema": {
+        "properties": {
+          "hl": {
+            "description": "UI language, e.g. en-US",
+            "type": "string"
+          },
+          "tz": {
+            "description": "Timezone offset in minutes",
+            "type": "number"
+          }
+        },
+        "required": [
+          "hl",
+          "tz"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Generic MCP HTTP handler sends GET /trends/api/explore/pickers/category, binds named parameters into query/form fields and returns bounded response.",
+      "validation_notes": [
+        "req, where present, is a JSON-encoded string: MCP schema does not expose nested comparison/widget schema or validate JSON locally; generic handler forwards values. Required fields are schema requirements, handler itself skips missing bindings. Extra arguments are forwarded despite no additionalProperties constraint."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_pickers_geo",
+      "description": "Full geo code-to-name lookup tree (country/region/DMA/city). Openly accessible, no clearance cookie required. Required: hl, tz. Returns the geo. (public)",
+      "inputSchema": {
+        "properties": {
+          "hl": {
+            "description": "UI language, e.g. en-US",
+            "type": "string"
+          },
+          "tz": {
+            "description": "Timezone offset in minutes",
+            "type": "number"
+          }
+        },
+        "required": [
+          "hl",
+          "tz"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Generic MCP HTTP handler sends GET /trends/api/explore/pickers/geo, binds named parameters into query/form fields and returns bounded response.",
+      "validation_notes": [
+        "req, where present, is a JSON-encoded string: MCP schema does not expose nested comparison/widget schema or validate JSON locally; generic handler forwards values. Required fields are schema requirements, handler itself skips missing bindings. Extra arguments are forwarded despite no additionalProperties constraint."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_region",
+      "description": "Interest-by-region for a keyword.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "category": {
+            "description": "Google Trends category ID (default: 0)",
+            "type": "number"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "geo": {
+            "description": "Geo code to scope the comparison (e.g. US); default: worldwide",
+            "type": "string"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "keyword": {
+            "description": "Positional argument <keyword>",
+            "type": "string"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "resolution": {
+            "description": "Geo resolution: COUNTRY, REGION, DMA, or CITY (best-effort)",
+            "type": "string"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeframe": {
+            "description": "Time range, e.g. 'today 12-m' (default: today 12-m)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Explore plus GEO_MAP request for a keyword, verifies TIMESERIES has data when available; caches region records.",
+      "validation_notes": [
+        "Resolution is a best-effort override only when widget request already contains resolution; no schema enum or implementation allowlist.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_region.go",
+          "start_line": 1,
+          "end_line": 138,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_region.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/gtrends/explore.go",
+          "start_line": 1,
+          "end_line": 340,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/gtrends/explore.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_related",
+      "description": "Related queries and/or topics for a keyword (top + rising).",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "category": {
+            "description": "Google Trends category ID (default: 0)",
+            "type": "number"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "facet": {
+            "description": "Which related data to fetch: queries, topics, or both (default: both)",
+            "type": "string"
+          },
+          "geo": {
+            "description": "Geo code (e.g. US); default: worldwide",
+            "type": "string"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "keyword": {
+            "description": "Positional argument <keyword>",
+            "type": "string"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeframe": {
+            "description": "Time range, e.g. 'today 12-m' (default: today 12-m)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Explore plus RELATED_QUERIES/TOPICS requests, returns top and rising terms and caches them locally.",
+      "validation_notes": [
+        "Implementation accepts facet queries, topics, both; empty facet becomes both. Schema has no enum.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_related.go",
+          "start_line": 1,
+          "end_line": 139,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_related.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/gtrends/explore.go",
+          "start_line": 1,
+          "end_line": 340,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/gtrends/explore.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_seasonality",
+      "description": "Computes monthly averages, peak month, and a seasonality strength score for a keyword from cached history.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "geo": {
+            "description": "Geo code to scope the seasonality calculation (e.g. US); default: all cached geos",
+            "type": "string"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "keyword": {
+            "description": "Positional argument <keyword>",
+            "type": "string"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Computes monthly averages, peak month and seasonality strength from cached interest points.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_seasonality.go",
+          "start_line": 1,
+          "end_line": 140,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_seasonality.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_stale",
+      "description": "Lists tracked keywords whose local data hasn't been refreshed recently",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "older-than": {
+            "description": "Consider keywords stale if not synced within this window (e.g. 7d, 24h); default 7d",
+            "type": "string"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Reads tracked local keyword query timestamps and lists entries older than threshold.",
+      "validation_notes": [
+        "older-than is parsed by ParseDurationLoose; empty defaults to 7d.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_stale.go",
+          "start_line": 1,
+          "end_line": 94,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_stale.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_trending",
+      "description": "Current trending search topics (optionally filtered by geo). See also: trending at.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "geo": {
+            "description": "Geo code to scope trending topics (e.g. US); default: worldwide",
+            "type": "string"
+          },
+          "hl": {
+            "description": "UI/response language (default: en-US)",
+            "type": "string"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Requests Google Trends Trending Now batchexecute RPC and caches topic/rank/date/geo locally.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_trending.go",
+          "start_line": 1,
+          "end_line": 79,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_trending.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/gtrends/trending.go",
+          "start_line": 1,
+          "end_line": 369,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/gtrends/trending.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_trending_at",
+      "description": "See what was trending on a specific past date and geo — a question Google Trends' own live UI cannot answer.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "date": {
+            "description": "Date to look up (YYYY-MM-DD), required",
+            "type": "string"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "geo": {
+            "description": "Filter by geo code (e.g. US)",
+            "type": "string"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Looks up cached trending topics by date and optional geo; cannot fetch historical dates from Google.",
+      "validation_notes": [
+        "Implementation requires nonempty date although schema does not mark date required; YYYY-MM-DD is documented but not parsed/validated before equality lookup.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/trends_trending_at.go",
+          "start_line": 1,
+          "end_line": 79,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/trends_trending_at.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_widget_comparedgeo",
+      "description": "Interest-by-region data for the GEO_MAP widget. req and token must come from a prior explore call's matching widget entry. Required: hl, tz, req, token. Returns the comparedgeo.",
+      "inputSchema": {
+        "properties": {
+          "hl": {
+            "description": "UI/response language, e.g. en-US",
+            "type": "string"
+          },
+          "req": {
+            "description": "JSON-encoded widget.request object copied verbatim from the matching explore() widget entry",
+            "type": "string"
+          },
+          "token": {
+            "description": "Widget token copied verbatim from the matching explore() widget entry",
+            "type": "string"
+          },
+          "tz": {
+            "description": "Timezone offset in minutes",
+            "type": "number"
+          }
+        },
+        "required": [
+          "hl",
+          "tz",
+          "req",
+          "token"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Generic MCP HTTP handler sends GET /trends/api/widgetdata/comparedgeo, binds named parameters into query/form fields and returns bounded response.",
+      "validation_notes": [
+        "req, where present, is a JSON-encoded string: MCP schema does not expose nested comparison/widget schema or validate JSON locally; generic handler forwards values. Required fields are schema requirements, handler itself skips missing bindings. Extra arguments are forwarded despite no additionalProperties constraint."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_widget_multiline",
+      "description": "Interest-over-time data for the TIMESERIES widget. req and token must come from a prior explore call's matching widget entry. Required: hl, tz, req, token. Returns the multiline.",
+      "inputSchema": {
+        "properties": {
+          "hl": {
+            "description": "UI/response language, e.g. en-US",
+            "type": "string"
+          },
+          "req": {
+            "description": "JSON-encoded widget.request object copied verbatim from the matching explore() widget entry",
+            "type": "string"
+          },
+          "token": {
+            "description": "Widget token copied verbatim from the matching explore() widget entry",
+            "type": "string"
+          },
+          "tz": {
+            "description": "Timezone offset in minutes",
+            "type": "number"
+          }
+        },
+        "required": [
+          "hl",
+          "tz",
+          "req",
+          "token"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Generic MCP HTTP handler sends GET /trends/api/widgetdata/multiline, binds named parameters into query/form fields and returns bounded response.",
+      "validation_notes": [
+        "req, where present, is a JSON-encoded string: MCP schema does not expose nested comparison/widget schema or validate JSON locally; generic handler forwards values. Required fields are schema requirements, handler itself skips missing bindings. Extra arguments are forwarded despite no additionalProperties constraint."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trends_widget_relatedsearches",
+      "description": "Related queries and related topics (both top and rising) for the RELATED_QUERIES/RELATED_TOPICS widgets. req and token must come from a prior explore call's matching widget entry. Required: hl, tz, req, token. Returns the relatedsearches.",
+      "inputSchema": {
+        "properties": {
+          "hl": {
+            "description": "UI/response language, e.g. en-US",
+            "type": "string"
+          },
+          "req": {
+            "description": "JSON-encoded widget.request object copied verbatim from the matching explore() widget entry",
+            "type": "string"
+          },
+          "token": {
+            "description": "Widget token copied verbatim from the matching explore() widget entry",
+            "type": "string"
+          },
+          "tz": {
+            "description": "Timezone offset in minutes",
+            "type": "number"
+          }
+        },
+        "required": [
+          "hl",
+          "tz",
+          "req",
+          "token"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Generic MCP HTTP handler sends GET /trends/api/widgetdata/relatedsearches, binds named parameters into query/form fields and returns bounded response.",
+      "validation_notes": [
+        "req, where present, is a JSON-encoded string: MCP schema does not expose nested comparison/widget schema or validate JSON locally; generic handler forwards values. Required fields are schema requirements, handler itself skips missing bindings. Extra arguments are forwarded despite no additionalProperties constraint."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 33,
+          "end_line": 164,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/tools.go",
+          "start_line": 212,
+          "end_line": 905,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/tools.go"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "workflow",
+      "description": "Compound workflows that combine multiple API operations",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Parent command returns subcommand guidance, no compound operation.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/channel_workflow.go",
+          "start_line": 1,
+          "end_line": 165,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/channel_workflow.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true,
+      "implementation_status": "guidance-only"
+    },
+    {
+      "name": "workflow_archive",
+      "description": "Archive fetches all syncable resources from the API and stores them in a\nlocal SQLite database. Supports incremental sync (only new data since last run)\nand full resync. After archiving, use 'search' for instant full-text search.",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "db": {
+            "description": "SQLite database file path (default: resolved data directory data.db)",
+            "type": "string"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "full": {
+            "description": "Full re-archive (ignore previous sync state) (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Opens local store and iterates an empty hard-coded resources list; archives zero records despite registered description.",
+      "validation_notes": [
+        "Hard-coded resources list is empty; this registered command is a no-op for API archival.",
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/channel_workflow.go",
+          "start_line": 1,
+          "end_line": 165,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/channel_workflow.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true,
+      "implementation_status": "unsupported"
+    },
+    {
+      "name": "workflow_status",
+      "description": "Show local archive status and sync state for all resources",
+      "inputSchema": {
+        "properties": {
+          "agent": {
+            "description": "Set all agent-friendly defaults (--json --compact --no-input --no-color --yes) (default: false)",
+            "type": "boolean"
+          },
+          "allow-partial-failure": {
+            "description": "Downgrade response-body partial-failure (e.g. partialFailureError) to a warning instead of a non-zero exit (default: false)",
+            "type": "boolean"
+          },
+          "compact": {
+            "description": "Return only key fields (id, name, status, timestamps) for minimal token usage (default: false)",
+            "type": "boolean"
+          },
+          "csv": {
+            "description": "Output as CSV (table and array responses) (default: false)",
+            "type": "boolean"
+          },
+          "db": {
+            "description": "SQLite database file path (default: resolved data directory data.db)",
+            "type": "string"
+          },
+          "dry-run": {
+            "description": "Show request without sending (default: false)",
+            "type": "boolean"
+          },
+          "human-friendly": {
+            "description": "Enable colored output and rich formatting (default: false)",
+            "type": "boolean"
+          },
+          "idempotent": {
+            "description": "Treat already-existing create results as a successful no-op (default: false)",
+            "type": "boolean"
+          },
+          "json": {
+            "description": "Output as JSON (default: false)",
+            "type": "boolean"
+          },
+          "max-age": {
+            "description": "Maximum acceptable age of local-store data before a stderr hint suggests sync; 0 disables (default: 30m0s)",
+            "type": "string"
+          },
+          "no-cache": {
+            "description": "Bypass response cache (default: false)",
+            "type": "boolean"
+          },
+          "no-color": {
+            "description": "Disable colored output (default: false)",
+            "type": "boolean"
+          },
+          "no-input": {
+            "description": "Disable all interactive prompts (for CI/agents) (default: false)",
+            "type": "boolean"
+          },
+          "plain": {
+            "description": "Output as plain tab-separated text (default: false)",
+            "type": "boolean"
+          },
+          "quiet": {
+            "description": "Bare output, one value per line (default: false)",
+            "type": "boolean"
+          },
+          "select": {
+            "description": "Comma-separated fields to include in output (e.g. --select id,name,status)",
+            "type": "string"
+          },
+          "timeout": {
+            "description": "Request timeout (default: 1m0s)",
+            "type": "string"
+          },
+          "yes": {
+            "description": "Skip confirmation prompts (for agents and scripts) (default: false)",
+            "type": "boolean"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Opens local SQLite store and returns resource counts/status.",
+      "validation_notes": [
+        "Command mirror shells out to companion google-trends-pp-cli; missing binary produces tool error. Handler rejects unknown named parameters and flag-like positional arguments. Cobra flag defaults are documented in property descriptions, not JSON Schema default values; numeric flags are schema number even when CLI flag parses integer, and stringSlice flags are schema strings."
+      ],
+      "sources": [
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/walker.go",
+          "start_line": 1,
+          "end_line": 80,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/walker.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/typemap.go",
+          "start_line": 1,
+          "end_line": 223,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/typemap.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/root.go",
+          "start_line": 149,
+          "end_line": 210,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/root.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/cli/channel_workflow.go",
+          "start_line": 1,
+          "end_line": 165,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/cli/channel_workflow.go"
+        },
+        {
+          "path": "library/marketing/google-trends/internal/mcp/cobratree/shellout.go",
+          "start_line": 1,
+          "end_line": 287,
+          "url": "https://github.com/mvanhorn/printing-press-library/blob/985f5d7cc305b38b501c1e6302ac731a38eac503/library/marketing/google-trends/internal/mcp/cobratree/shellout.go"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

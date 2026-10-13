@@ -1,0 +1,296 @@
+{
+  "repo": "jmanek/google-news-trends-mcp",
+  "slug": "jmanek-google-news-trends-mcp",
+  "commit": "3e474d5b449925b124ed99509ee166b18884e934",
+  "source_url": "https://github.com/jmanek/google-news-trends-mcp",
+  "subdirectory": null,
+  "extraction_method": "AST-preserved registered decorators, full signatures and Pydantic model definitions evaluated locally with FastMCP 3.1.1 and Pydantic 2.11.7 (versions pinned in uv.lock), followed by in-process FastMCP Client.list_tools. Tool bodies replaced with pass only for schema extraction; news descriptions populated verbatim from AST docstrings. Full implementations inspected separately.",
+  "limitations": [
+    "Source module imports, backend initialization, middleware and browser lifespan were bypassed during schema-only introspection to avoid unrelated dependencies and any network/browser side effects. No tool implementation was executed.",
+    "FastMCP and Pydantic match uv.lock; other transitive framework dependencies use available compatible versions. pyproject.toml permits newer FastMCP >=3/Pydantic >=2.11.7, whose future schema behavior may vary.",
+    "Runtime Google Trends geographic support and remote availability were not tested."
+  ],
+  "recommendation": "include",
+  "reason": "All five unconditional registrations have complete locally generated caller input schemas, including one implemented Google Trends RSS trending tool.",
+  "tools": [
+    {
+      "name": "get_news_by_keyword",
+      "description": "\n    Find articles by keyword using Google News.\n    ",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "description": "Search term to find articles.",
+            "type": "string"
+          },
+          "period": {
+            "default": 7,
+            "description": "Number of days to look back for articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "maximum": 25,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Queries Google News through GNews.get_news, sets period in days and max_results, decodes RSS URLs and downloads publisher articles using newspaper4k with cloudscraper/Playwright fallback. Returns article fields according to full_data; summarize tries client LLM sampling then newspaper NLP fallback.",
+      "validation_notes": [
+        "Pydantic Field enforces period >= 1 and 1 <= max_results <= 25 as represented in the schema; there is no period upper bound.",
+        "Search selector is a free string with no minLength or enum."
+      ],
+      "sources": [
+        {
+          "path": "src/google_news_trends_mcp/server.py",
+          "start_line": 161,
+          "end_line": 194,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/server.py#L165"
+        },
+        {
+          "path": "src/google_news_trends_mcp/news.py",
+          "start_line": 202,
+          "end_line": 218,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/news.py#L202"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_news_by_location",
+      "description": "Find articles by location using Google News.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "location": {
+            "description": "Name of city/state/country.",
+            "type": "string"
+          },
+          "period": {
+            "default": 7,
+            "description": "Number of days to look back for articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "maximum": 25,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "location"
+        ],
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Queries Google News through GNews.get_news_by_location, sets period in days and max_results, decodes RSS URLs and downloads publisher articles using newspaper4k with cloudscraper/Playwright fallback. Returns article fields according to full_data; summarize tries client LLM sampling then newspaper NLP fallback.",
+      "validation_notes": [
+        "Pydantic Field enforces period >= 1 and 1 <= max_results <= 25 as represented in the schema; there is no period upper bound.",
+        "Search selector is a free string with no minLength or enum."
+      ],
+      "sources": [
+        {
+          "path": "src/google_news_trends_mcp/server.py",
+          "start_line": 197,
+          "end_line": 230,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/server.py#L201"
+        },
+        {
+          "path": "src/google_news_trends_mcp/news.py",
+          "start_line": 239,
+          "end_line": 253,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/news.py#L239"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_news_by_topic",
+      "description": "Find articles by topic using Google News.\n    topic is one of\n    WORLD, NATION, BUSINESS, TECHNOLOGY, ENTERTAINMENT, SPORTS, SCIENCE, HEALTH,\n    POLITICS, CELEBRITIES, TV, MUSIC, MOVIES, THEATER, SOCCER, CYCLING, MOTOR SPORTS,\n    TENNIS, COMBAT SPORTS, BASKETBALL, BASEBALL, FOOTBALL, SPORTS BETTING, WATER SPORTS,\n    HOCKEY, GOLF, CRICKET, RUGBY, ECONOMY, PERSONAL FINANCE, FINANCE, DIGITAL CURRENCIES,\n    MOBILE, ENERGY, GAMING, INTERNET SECURITY, GADGETS, VIRTUAL REALITY, ROBOTICS, NUTRITION,\n    PUBLIC HEALTH, MENTAL HEALTH, MEDICINE, SPACE, WILDLIFE, ENVIRONMENT, NEUROSCIENCE, PHYSICS,\n    GEOLOGY, PALEONTOLOGY, SOCIAL SCIENCES, EDUCATION, JOBS, ONLINE EDUCATION, HIGHER EDUCATION,\n    VEHICLES, ARTS-DESIGN, BEAUTY, FOOD, TRAVEL, SHOPPING, HOME, OUTDOORS, FASHION.\n    ",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "topic": {
+            "description": "Topic to search for articles.",
+            "type": "string"
+          },
+          "period": {
+            "default": 7,
+            "description": "Number of days to look back for articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "maximum": 25,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Queries Google News through GNews.get_news_by_topic, sets period in days and max_results, decodes RSS URLs and downloads publisher articles using newspaper4k with cloudscraper/Playwright fallback. Returns article fields according to full_data; summarize tries client LLM sampling then newspaper NLP fallback.",
+      "validation_notes": [
+        "Pydantic Field enforces period >= 1 and 1 <= max_results <= 25 as represented in the schema; there is no period upper bound.",
+        "Search selector is a free string with no minLength or enum.",
+        "The listed topic names appear only in the registered description, not as a schema enum or explicit local validation; the string is delegated to GNews."
+      ],
+      "sources": [
+        {
+          "path": "src/google_news_trends_mcp/server.py",
+          "start_line": 233,
+          "end_line": 263,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/server.py#L234"
+        },
+        {
+          "path": "src/google_news_trends_mcp/news.py",
+          "start_line": 256,
+          "end_line": 280,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/news.py#L256"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_top_news",
+      "description": "\n    Get top news stories from Google News.\n    ",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "period": {
+            "default": 3,
+            "description": "Number of days to look back for top articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "maximum": 25,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Queries Google News through GNews.get_top_news, sets period in days and max_results, decodes RSS URLs and downloads publisher articles using newspaper4k with cloudscraper/Playwright fallback. Returns article fields according to full_data; summarize tries client LLM sampling then newspaper NLP fallback.",
+      "validation_notes": [
+        "Pydantic Field enforces period >= 1 and 1 <= max_results <= 25 as represented in the schema; there is no period upper bound.",
+        "All input fields are optional with defaults."
+      ],
+      "sources": [
+        {
+          "path": "src/google_news_trends_mcp/server.py",
+          "start_line": 266,
+          "end_line": 294,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/server.py#L267"
+        },
+        {
+          "path": "src/google_news_trends_mcp/news.py",
+          "start_line": 221,
+          "end_line": 236,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/news.py#L221"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_trending_terms",
+      "description": "\n    Returns google trends for a specific geo location.\n    ",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "geo": {
+            "default": "US",
+            "description": "Geographic target for trending terms. Supports four levels of granularity:\n- Worldwide: empty string ''\n- Country: ISO 3166-1 alpha-2 code, e.g. 'US', 'GB', 'CA'\n- Subdivision (state/province/region): ISO 3166-2 format 'CC-XX' or 'CC-XXX', e.g. 'US-CA' (California), 'BE-BRU' (Brussels)\n- US metro area: bare Nielsen DMA code (numeric string), e.g. '807' (San Francisco Bay Area), '501' (New York City)",
+            "type": "string"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each trend including related news stories.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches current Google Trends trending terms via trendspy Trends.trending_now_by_rss(geo); sorts descending using int(volume[:-1]); returns keyword/volume only by default or richer trend objects with related news when full_data is true. Any fetch/sort exception is logged and returns an empty list.",
+      "validation_notes": [
+        "geo is a free string: geographic examples in its description are not pattern/enum constraints. The wrapper performs no geo format validation; downstream trendspy behavior was not exercised."
+      ],
+      "sources": [
+        {
+          "path": "src/google_news_trends_mcp/server.py",
+          "start_line": 297,
+          "end_line": 326,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/server.py#L298"
+        },
+        {
+          "path": "src/google_news_trends_mcp/news.py",
+          "start_line": 291,
+          "end_line": 303,
+          "url": "https://github.com/jmanek/google-news-trends-mcp/blob/3e474d5b449925b124ed99509ee166b18884e934/src/google_news_trends_mcp/news.py#L291"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

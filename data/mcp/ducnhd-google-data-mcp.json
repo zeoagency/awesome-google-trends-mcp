@@ -1,0 +1,386 @@
+{
+  "repo": "ducnhd/google-data-mcp",
+  "slug": "ducnhd-google-data-mcp",
+  "commit": "b9328ccd8d5e637175fcd71cc1122249123d0e71",
+  "source_url": "https://github.com/ducnhd/google-data-mcp",
+  "subdirectory": null,
+  "extraction_method": "Imported actual src/google_data_mcp/server.py and awaited MCPServer.list_tools() locally with mcp 2.3.0 and Pydantic 2.14.1 in an isolated source-local venv; inspected every registration and backing implementation. No tool invocation or Google network request.",
+  "limitations": [
+    "Runtime dependencies are unpinned (mcp>=2.0); recorded schemas reflect mcp 2.3.0/Pydantic 2.14.1. External Google endpoint functionality was not tested."
+  ],
+  "recommendation": "include",
+  "reason": "All seven unconditional tools have complete actual local tool-list schemas, including three implemented Google Trends tools.",
+  "tools": [
+    {
+      "name": "google_trends_interest",
+      "description": "Google Trends interest over time for ONE keyword. Values are 0-100 relative WITHIN this single request, so they are not comparable to another call's numbers — use google_trends_compare when you need to rank terms against each other.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "A single search term.",
+            "title": "Keyword",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "description": "Country or sub-region code (US, VN, US-CA). Empty = worldwide.",
+            "title": "Geo",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Google's own range string: 'today 12-m', 'today 5-y', 'now 7-d', 'all', or '2025-01-01 2025-12-31'.",
+            "title": "Timeframe",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "google_trends_interestArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches explore TIMESERIES and multiline data for one term; returns dates, relative interest and isPartial; caches for 6 hours.",
+      "validation_notes": [
+        "Schema allows empty keyword; TrendsClient rejects an empty/whitespace-only keyword. geo/timeframe are unrestricted strings; listed formats are documentation only."
+      ],
+      "sources": [
+        {
+          "path": "src/google_data_mcp/server.py",
+          "start_line": 50,
+          "end_line": 94,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/server.py#L50-L94"
+        },
+        {
+          "path": "src/google_data_mcp/trends.py",
+          "start_line": 197,
+          "end_line": 256,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/trends.py#L197-L256"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "google_trends_compare",
+      "description": "Compare up to 5 keywords in ONE Google Trends request, so their 0-100 values ARE normalised against each other and can be ranked. Google silently drops a 6th term, so 6+ is refused rather than answered with a term missing.",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "description": "2 to 5 search terms.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "geo": {
+            "default": "",
+            "description": "Country or sub-region code. Empty = worldwide.",
+            "title": "Geo",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Google range string, e.g. 'today 12-m'.",
+            "title": "Timeframe",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "google_trends_compareArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Trims and drops empty terms, fetches one shared Trends TIMESERIES comparison, maps values to terms, caches for 6 hours using sorted terms as cache key.",
+      "validation_notes": [
+        "Schema has list[str] without minItems/maxItems. Implementation strips terms, discards empty values and requires 2–5 remaining terms. No uniqueness constraint; duplicate terms overwrite keys in output values. geo/timeframe are unrestricted strings."
+      ],
+      "sources": [
+        {
+          "path": "src/google_data_mcp/server.py",
+          "start_line": 97,
+          "end_line": 141,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/server.py#L97-L141"
+        },
+        {
+          "path": "src/google_data_mcp/trends.py",
+          "start_line": 197,
+          "end_line": 256,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/trends.py#L197-L256"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "google_trends_trending",
+      "description": "What is trending on Google right now in one country. `searchVolume` is Google's own rounded bucket (100000, 1000000), not a precise count.",
+      "inputSchema": {
+        "properties": {
+          "geo": {
+            "default": "US",
+            "description": "Two-letter country code, e.g. US, VN, GB.",
+            "title": "Geo",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "description": "How many terms to return.",
+            "maximum": 200,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "google_trends_trendingArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches Trending now WIZ batchexecute RPC i0OFE with a fixed 48-hour window; returns term, geo, startedAt and rounded searchVolume; caches full feed for 30 minutes then slices to limit.",
+      "validation_notes": [
+        "limit bounds 1–200 are schema constraints. geo has no country-code pattern or enum; two-letter code is documentary."
+      ],
+      "sources": [
+        {
+          "path": "src/google_data_mcp/server.py",
+          "start_line": 144,
+          "end_line": 163,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/server.py#L144-L163"
+        },
+        {
+          "path": "src/google_data_mcp/trends.py",
+          "start_line": 259,
+          "end_line": 293,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/trends.py#L259-L293"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "youtube_listing",
+      "description": "List videos from YouTube: a channel's Shorts tab, a channel's videos tab, or search results. Returns videoId, title, view count, and (for videos/search) a publish date. Transcripts are NOT available from this server — Google gates them behind a token this server cannot mint.",
+      "inputSchema": {
+        "properties": {
+          "target": {
+            "description": "A channel (@handle, UC… id or URL) for 'shorts'/'videos'; a search query for 'search'.",
+            "title": "Target",
+            "type": "string"
+          },
+          "kind": {
+            "default": "videos",
+            "description": "Which listing to read.",
+            "enum": [
+              "shorts",
+              "videos",
+              "search"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "limit": {
+            "default": 30,
+            "description": "Maximum rows. Pagination stops early if the listing runs out.",
+            "maximum": 300,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "title": "youtube_listingArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Fetches channel Shorts/videos or YouTube search listings and continuation pages up to limit; returns channelInfo and items; caches 3 hours. No transcript tool.",
+      "validation_notes": [
+        "kind enum and limit 1–300 are schema constraints. For channel listings, whitespace-only target raises empty channel; no schema minLength/pattern."
+      ],
+      "sources": [
+        {
+          "path": "src/google_data_mcp/server.py",
+          "start_line": 167,
+          "end_line": 211,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/server.py#L167-L211"
+        },
+        {
+          "path": "src/google_data_mcp/youtube.py",
+          "start_line": 99,
+          "end_line": 269,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/youtube.py#L99-L269"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "google_ads_advertisers",
+      "description": "Find advertisers in Google's Ads Transparency Center by name. Returns each advertiser's id, country and Google's declared ad count — pass the id to google_ads_creatives.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "Advertiser or brand name to search.",
+            "title": "Keyword",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "How many matches to return.",
+            "maximum": 20,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "google_ads_advertisersArguments",
+        "type": "object"
+      },
+      "domain": "ads",
+      "behavior": "Calls Ads Transparency SearchService/SearchSuggestions; returns advertiser names, IDs, countries, declared ad counts and URLs; caches 24 hours.",
+      "validation_notes": [
+        "limit 1–20 is a schema constraint. keyword has no minLength and is not explicitly validated."
+      ],
+      "sources": [
+        {
+          "path": "src/google_data_mcp/server.py",
+          "start_line": 215,
+          "end_line": 233,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/server.py#L215-L233"
+        },
+        {
+          "path": "src/google_data_mcp/ads.py",
+          "start_line": 171,
+          "end_line": 201,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/ads.py#L171-L201"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "google_ads_creatives",
+      "description": "Every ad an advertiser is currently running, from Google's Ads Transparency Center: creative id, format, preview URL and first/last shown dates. An advertiser with zero ads is a real answer — Google keeps advertisers whose ads have stopped running.",
+      "inputSchema": {
+        "properties": {
+          "advertiser": {
+            "description": "An AR… advertiser id, or a Transparency Center URL containing one.",
+            "title": "Advertiser",
+            "type": "string"
+          },
+          "limit": {
+            "default": 40,
+            "description": "Maximum ads to return.",
+            "maximum": 300,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "advertiser"
+        ],
+        "title": "google_ads_creativesArguments",
+        "type": "object"
+      },
+      "domain": "ads",
+      "behavior": "Extracts advertiser AR numeric ID, pages Ads Transparency SearchCreatives in batches of at most 40; returns creative metadata, preview URLs, format and shown dates; caches 12 hours.",
+      "validation_notes": [
+        "limit 1–300 is a schema constraint. Implementation requires AR followed by digits, either alone or as a slash-separated URL component after replacing ? and & with /. No input-schema pattern."
+      ],
+      "sources": [
+        {
+          "path": "src/google_data_mcp/server.py",
+          "start_line": 236,
+          "end_line": 272,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/server.py#L236-L272"
+        },
+        {
+          "path": "src/google_data_mcp/ads.py",
+          "start_line": 71,
+          "end_line": 82,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/ads.py#L71-L82"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "google_play_reviews",
+      "description": "Reviews for an Android app: rating, text, date, app version, thumbs-up and the developer's reply. Reviewer names and avatars are omitted unless you ask for them. Note each language/country returns a DIFFERENT set of reviews, so vary hl/gl to widen coverage.",
+      "inputSchema": {
+        "properties": {
+          "app_id": {
+            "description": "Android package name, e.g. com.spotify.music.",
+            "title": "App Id",
+            "type": "string"
+          },
+          "limit": {
+            "default": 60,
+            "description": "Maximum reviews.",
+            "maximum": 400,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "relevant",
+            "description": "Google's own ordering.",
+            "enum": [
+              "relevant",
+              "newest"
+            ],
+            "title": "Sort",
+            "type": "string"
+          },
+          "hl": {
+            "default": "en",
+            "description": "Language code. Each language returns a different set of reviews.",
+            "title": "Hl",
+            "type": "string"
+          },
+          "gl": {
+            "default": "US",
+            "description": "Country code.",
+            "title": "Gl",
+            "type": "string"
+          },
+          "include_author": {
+            "default": false,
+            "description": "Include the reviewer's display name. Off by default: it is personal data and rarely needed for product or ASO analysis.",
+            "title": "Include Author",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "app_id"
+        ],
+        "title": "google_play_reviewsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Fetches embedded Play app-page reviews and paginates UsvDTd RPC; returns rating, text, date, version, thumbs-up and developer reply, optionally author name; caches 6 hours. The initial page is always the embedded default ordering; sort applies only to subsequent RPC pages.",
+      "validation_notes": [
+        "sort enum and limit 1–400 are schema constraints. app_id/hl/gl have no schema format, pattern or enum. include_author only adds display name; avatars and account IDs remain omitted."
+      ],
+      "sources": [
+        {
+          "path": "src/google_data_mcp/server.py",
+          "start_line": 276,
+          "end_line": 325,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/server.py#L276-L325"
+        },
+        {
+          "path": "src/google_data_mcp/play.py",
+          "start_line": 156,
+          "end_line": 219,
+          "url": "https://github.com/ducnhd/google-data-mcp/blob/b9328ccd8d5e637175fcd71cc1122249123d0e71/src/google_data_mcp/play.py#L156-L219"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

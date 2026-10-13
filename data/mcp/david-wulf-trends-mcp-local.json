@@ -1,0 +1,1311 @@
+{
+  "repo": "david-wulf/trends-mcp-local",
+  "slug": "david-wulf-trends-mcp-local",
+  "commit": "1349b49e28a494eb72fd84be7c8ef5a6eab37bf0",
+  "source_url": "https://github.com/david-wulf/trends-mcp-local",
+  "subdirectory": null,
+  "extraction_method": "Subagent enumerated AST registrations and implementation source. Parent independently registered exact signature-only AST functions in MCPServer 2.3.0 / Pydantic 2.14.1 and captured all 22 tools via local list_tools(), without importing providers, loading dotenv, or executing tools.",
+  "limitations": [
+    "Requirements are unpinned; schemas reflect MCP 2.3.0 and Pydantic 2.14.1.",
+    "No remote tool calls were executed; external API behavior was reviewed in implementation source."
+  ],
+  "recommendation": "include",
+  "reason": "All 22 registrations and implementations are public; all seven Google Trends data tool input signatures are complete. Schema reconstructed rigorously with the runtime metadata limitation stated.",
+  "tools": [
+    {
+      "name": "gt_resolve_topic",
+      "description": "SUCHE 1 (Schritt 1): Begriff in ein Google-Trends-Thema aufloesen.\n\nGibt Kandidaten mit 'mid' (z. B. '/m/0bwlch6', '/g/11v0b99rt0'), Titel und\nTyp zurueck. Immer zuerst aufrufen und die 'mid' des besten Topics als\n'topic' fuer gt_topic_across_properties verwenden, damit ueber das *Thema*\n(Entitaet) statt ueber einen mehrdeutigen Suchbegriff gemessen wird.\n\n'geo' wirkt nur im DataForSEO-Backend (die Auflösung kommt dort aus der\nTopics-Liste eines Explore-Requests und ist regional). 30 Tage gecacht.\n",
+      "inputSchema": {
+        "properties": {
+          "thema": {
+            "title": "Thema",
+            "type": "string"
+          },
+          "language": {
+            "default": "de",
+            "title": "Language",
+            "type": "string"
+          },
+          "geo": {
+            "default": "DE",
+            "title": "Geo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "thema"
+        ],
+        "title": "gt_resolve_topicArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Resolves a keyword to up to eight Google Trends topic candidates using trendspy suggestions or DataForSEO Google Trends Explore topics; cached 30 days.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "DataForSEO accepts source-defined relative timeframes, all, or two YYYY-MM-DD tokens; unsupported values may fall back to trendspy unless DataForSEO explicitly forced. Geo translation uses provider location codes."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 62,
+          "end_line": 74,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L62-L74"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 1172,
+          "end_line": 1183,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L1172-L1183"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 191,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L191-L215"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 259,
+          "end_line": 279,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L259-L279"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 837,
+          "end_line": 888,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L837-L888"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "gt_topic_across_properties",
+      "description": "SUCHE 1: Interesse eines Themas ueber die verschiedenen Google-Suchen hinweg.\n\nMisst das Thema (mid aus gt_resolve_topic oder Keyword) in mehreren\nGoogle-Properties. Liefert je Property die 0-100-Zeitreihe plus\nAusreisser-/Spike-Analyse (Peak, aktueller Wert, Ausreisser mit Z-Wert).\n\nproperties: None = ['web','news'] (Discover-relevant, schnell); volle\nListe: ['web','youtube','news','images','shopping']. include_series=False\nliefert nur die kompakte Analyse (fuer Massen-Screenings). timeframe z. B.\n'today 12-m', 'today 5-y', 'now 7-d' (stuendlich, mit Uhrzeit).\n",
+      "inputSchema": {
+        "properties": {
+          "topic": {
+            "title": "Topic",
+            "type": "string"
+          },
+          "geo": {
+            "default": "DE",
+            "title": "Geo",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "category": {
+            "default": 0,
+            "title": "Category",
+            "type": "integer"
+          },
+          "properties": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Properties"
+          },
+          "include_series": {
+            "default": true,
+            "title": "Include Series",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "title": "gt_topic_across_propertiesArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Obtains separately normalized Google Trends time series per property and computes spike/outlier analysis; optionally omits series.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation accepts web, youtube, news, images, shopping (trimmed/lowercased); unknown properties return errors. Nullable/empty properties selects default web/news.",
+        "DataForSEO accepts source-defined relative timeframes, all, or two YYYY-MM-DD tokens; unsupported values may fall back to trendspy unless DataForSEO explicitly forced. Geo translation uses provider location codes."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 77,
+          "end_line": 100,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L77-L100"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 1186,
+          "end_line": 1204,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L1186-L1204"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 191,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L191-L215"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 300,
+          "end_line": 389,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L300-L389"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 891,
+          "end_line": 961,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L891-L961"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "gt_compare",
+      "description": "Bis zu 5 Keywords/Themen-mids in EINEM Request direkt vergleichen.\n\nDie 0-100-Skala ist ueber alle Keywords gemeinsam normiert - ideal, um\nThemen-Kandidaten fuer Discover-Artikel zu priorisieren ('welches Thema\nzieht gerade am staerksten?'). Liefert je Keyword Zeitreihe + Analyse\nplus ein Ranking nach aktuellem Interesse.\n",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "geo": {
+            "default": "DE",
+            "title": "Geo",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 3-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "category": {
+            "default": 0,
+            "title": "Category",
+            "type": "integer"
+          },
+          "gprop": {
+            "default": "web",
+            "title": "Gprop",
+            "type": "string"
+          },
+          "include_series": {
+            "default": true,
+            "title": "Include Series",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "gt_compareArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Compares up to five keywords/topic IDs in one jointly normalized Google Trends time series request and ranks current interest.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation drops blank keywords, truncates to first five, and rejects an empty effective list; no schema maxItems/minItems.",
+        "Implementation accepts web, youtube, news, images, shopping (trimmed/lowercased); unknown properties return errors.",
+        "DataForSEO accepts source-defined relative timeframes, all, or two YYYY-MM-DD tokens; unsupported values may fall back to trendspy unless DataForSEO explicitly forced. Geo translation uses provider location codes."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 103,
+          "end_line": 122,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L103-L122"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 1207,
+          "end_line": 1219,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L1207-L1219"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 191,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L191-L215"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 392,
+          "end_line": 462,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L392-L462"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 964,
+          "end_line": 1045,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L964-L1045"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "gt_interest_by_region",
+      "description": "Regionale Verteilung des Interesses fuer ein Thema (Ausreisser-Regionen).\n\nAbsteigend nach Interesse sortiert, Null-Regionen entfernt, auf 'limit'\ngekuerzt.\n",
+      "inputSchema": {
+        "properties": {
+          "topic": {
+            "title": "Topic",
+            "type": "string"
+          },
+          "geo": {
+            "default": "DE",
+            "title": "Geo",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "category": {
+            "default": 0,
+            "title": "Category",
+            "type": "integer"
+          },
+          "gprop": {
+            "default": "web",
+            "title": "Gprop",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "title": "gt_interest_by_regionArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Retrieves Google Trends regional interest; removes zero values, sorts descending, and limits results.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation accepts web, youtube, news, images, shopping (trimmed/lowercased); unknown properties return errors.",
+        "Implementation applies max(1, limit) when slicing output; no schema lower bound.",
+        "DataForSEO accepts source-defined relative timeframes, all, or two YYYY-MM-DD tokens; unsupported values may fall back to trendspy unless DataForSEO explicitly forced. Geo translation uses provider location codes."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 125,
+          "end_line": 141,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L125-L141"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 1222,
+          "end_line": 1234,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L1222-L1234"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 191,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L191-L215"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 465,
+          "end_line": 529,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L465-L529"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 1048,
+          "end_line": 1097,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L1048-L1097"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "gt_categories",
+      "description": "SUCHE 2 (Schritt 1): Kategorie-Baum von Google Trends durchsuchen.\n\nDer Baum hat ~1133 Eintraege - Haupt- UND Unterkategorien (z. B.\n'Home & Garden'=11 und die Unterkategorien 'Home Appliances'=271,\n'Home Furnishings'=270). Jede 'id' - auch die einer Unterkategorie - ist\ndirekt als 'category' in gt_topic_across_properties und\ngt_discover_category verwendbar.\n\nWICHTIG zu 'find': Die Kategorienamen stehen in der gewaehlten 'language'\n(bei language='de' also 'Erneuerbare und alternative Energien', nicht\n'Renewable & Alternative Energy'). Damit eine englische Suche trotzdem\ntrifft, matcht 'find' gegen BEIDE Baeume - find='Energy' und find='Energie'\nliefern dieselben ids (233, 954, 657). Die ids sind sprachunabhaengig.\nJeder Treffer enthaelt 'name' (Zielsprache) und 'name_en'.\n\nBei 0 Treffern also nicht auf category=0 zurueckfallen, sondern ein\nkuerzeres Stichwort probieren ('Solar' statt 'Solaranlage').\nDer Baum ist 30 Tage gecacht (wiederholte Aufrufe sind gratis).",
+      "inputSchema": {
+        "properties": {
+          "find": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Find"
+          },
+          "language": {
+            "default": "de",
+            "title": "Language",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "gt_categoriesArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Searches cached Google Trends category trees across requested language and English; falls back to DataForSEO category metadata.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation applies max(1, limit) when slicing output; no schema lower bound."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 144,
+          "end_line": 164,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L144-L164"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 563,
+          "end_line": 666,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L563-L666"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 191,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L191-L215"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "gt_discover_category",
+      "description": "SUCHE 2: Klassisches Entdecken innerhalb einer (Unter-)Kategorie.\n\nseed='' = reine Kategorie-Entdeckung (wie 'nur Kategorie gewaehlt' in der\nGoogle-Trends-Oberflaeche). Optional Seed-Keyword setzen, um innerhalb der\nKategorie zu fokussieren. Liefert aufsteigende (rising) und Top-Themen sowie\n-Suchanfragen.\n\ngprop waehlt die Art der Suche: 'web' (Default), 'youtube', 'news',\n'images', 'shopping'. Damit gibt es auch fuer Shopping und YouTube echte\nQueries statt nur Interessekurven. Ein unbekannter Wert wird abgewiesen und\nfaellt NICHT still auf 'web' zurueck.\n\nBackend-Hinweis: MIT Seed laeuft das ueber DataForSEO - Queries und Topics\nkommen dann in EINEM Request ($0,011 zusammen) und ohne Quota-Risiko. OHNE\nSeed (reine Kategorie-Entdeckung) kann DataForSEO nicht helfen, weil dort\nein Keyword Pflicht ist; dann uebernimmt trendspy mit dem bekannten\nGoogle-Kontingent. Ergebnisse werden 6 Stunden gecacht; bei erschoepftem\nKontingent kommt automatisch der letzte bekannte Stand mit\n'cache': {'stale': true, 'age_min': ...} zurueck, statt dass der Aufruf\nscheitert.\n",
+      "inputSchema": {
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "integer"
+          },
+          "geo": {
+            "default": "DE",
+            "title": "Geo",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 3-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "seed": {
+            "default": "",
+            "title": "Seed",
+            "type": "string"
+          },
+          "language": {
+            "default": "de",
+            "title": "Language",
+            "type": "string"
+          },
+          "gprop": {
+            "default": "web",
+            "title": "Gprop",
+            "type": "string"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "title": "gt_discover_categoryArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Obtains rising/top related topics and queries for category and optional seed; DataForSEO Google Trends Explore with seed, trendspy fallback otherwise unless paid backend forced.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation accepts web, youtube, news, images, shopping (trimmed/lowercased); unknown properties return errors.",
+        "DataForSEO accepts source-defined relative timeframes, all, or two YYYY-MM-DD tokens; unsupported values may fall back to trendspy unless DataForSEO explicitly forced. Geo translation uses provider location codes."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 167,
+          "end_line": 199,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L167-L199"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 1237,
+          "end_line": 1255,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L1237-L1255"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 191,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L191-L215"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 669,
+          "end_line": 754,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L669-L754"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 1100,
+          "end_line": 1166,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L1100-L1166"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "gt_trending_now",
+      "description": "SUCHE 2: Aktuell trendende Suchen mit Volumen und Wachstum in Prozent.\n\nRobuster Einstieg ins 'Trends entdecken'. Optional per 'category' (Name)\nfiltern - Google liefert diese Namen in der Regel englisch aus, auch bei\nlanguage='de' ('Sports', 'Politics', 'Entertainment', 'Other'). Bei 0\nTreffern listet der 'hinweis' die tatsaechlich vorhandenen Namen auf.\n'hours_since_started' ist das Alter des Trends in Stunden.\n30 Minuten gecacht.\n\nLaeuft IMMER ueber trendspy: DataForSEO hat fuer 'Trends jetzt' keinen\nEndpunkt. Bei erschoepftem Kontingent kommt hier also weiterhin der\nStale-Cache.\n",
+      "inputSchema": {
+        "properties": {
+          "geo": {
+            "default": "DE",
+            "title": "Geo",
+            "type": "string"
+          },
+          "language": {
+            "default": "de",
+            "title": "Language",
+            "type": "string"
+          },
+          "hours": {
+            "default": 24,
+            "title": "Hours",
+            "type": "integer"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Category"
+          },
+          "limit": {
+            "default": 40,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "gt_trending_nowArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Obtains current Google Trends searches using trendspy only; sorts by growth and volume, filters category substring, and limits output; quota failures may return stale cache.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation applies max(1, limit) when slicing output; no schema lower bound."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 202,
+          "end_line": 219,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L202-L219"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 757,
+          "end_line": 831,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L757-L831"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 191,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L191-L215"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "gt_backend",
+      "description": "Welches Trends-Backend ist aktiv, und was hat DataForSEO bisher gekostet.\n\nZeigt die Wirkung von TRENDS_BACKEND ('auto' | 'dataforseo' | 'trendspy'),\nob Zugangsdaten vorhanden sind, die Preise pro Request und die Ausgaben der\nletzten 30 Tage (Summe, je Endpunkt, je Tag). Gratis - liest nur die lokale\nCache-DB.\n",
+      "inputSchema": {
+        "properties": {},
+        "title": "gt_backendArguments",
+        "type": "object"
+      },
+      "domain": "server-management",
+      "behavior": "Reports configured backend, availability of credentials (without revealing them), source-defined prices, and local cost ledger summary.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 222,
+          "end_line": 231,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L222-L231"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 170,
+          "end_line": 188,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L170-L188"
+        },
+        {
+          "path": "trends_mcp/gtrends.py",
+          "start_line": 191,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/gtrends.py#L191-L215"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "gt_cache",
+      "description": "Wartung des Trends-Caches (SQLite, ueberlebt Neustarts) + Kostenledger.\n\naction='stats' zeigt Eintraege, TTL und Alter pro Namespace.\naction='cost' zeigt die DataForSEO-Ausgaben der letzten 'days' Tage.\naction='clear' leert alles oder - mit 'namespace' - nur einen Bereich\n('suggestions', 'categories', 'iot', 'compare', 'ibr', 'related_queries',\n'related_topics', 'trending_now', 'dfs_discover', 'dfs_locations',\n'dfs_categories'), um frische Daten zu erzwingen.\n\nAchtung: 'clear' auf einen Namespace, der ueber DataForSEO gefuellt wurde,\nbedeutet, dass die naechsten Aufrufe wieder echtes Geld kosten.\n",
+      "inputSchema": {
+        "properties": {
+          "action": {
+            "default": "stats",
+            "title": "Action",
+            "type": "string"
+          },
+          "namespace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Namespace"
+          },
+          "days": {
+            "default": 30,
+            "title": "Days",
+            "type": "integer"
+          }
+        },
+        "title": "gt_cacheArguments",
+        "type": "object"
+      },
+      "domain": "server-management",
+      "behavior": "Reads SQLite cache statistics or costs, or clears selected namespace/all cache entries.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "action is normalized and dispatched for stats/cost/clear; other values return an error. Cost lookback uses max(1, days). Namespace has no schema enumeration."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 234,
+          "end_line": 255,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L234-L255"
+        },
+        {
+          "path": "trends_mcp/cache.py",
+          "start_line": 300,
+          "end_line": 326,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/cache.py#L300-L326"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "dfs_demography",
+      "description": "Alters- und Geschlechtsverteilung der Nachfrage je Keyword ($0,0024).\n\nDiese Zahlen stammen NICHT von Google Trends - Google gibt Demografie per\nAPI nicht heraus. Es ist DataForSEOs eigene Clickstream-Mischmetrik\n(0-100 normiert, typischerweise einige Wochen Verzug). Nie mit\nGoogle-Trends-Kurven in eine Grafik legen; taugt fuer die\nZielgruppen-Einordnung ('wer sucht das?'), nicht fuer Zeitverlaeufe.\n\ngprop: 'web' (Default), 'news' oder 'shopping'. Bis 5 Keywords.\n",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "geo": {
+            "default": "DE",
+            "title": "Geo",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "gprop": {
+            "default": "web",
+            "title": "Gprop",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "dfs_demographyArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Retrieves age/gender demand distributions from DataForSEO own clickstream Trends, explicitly not Google Trends.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation drops blank keywords, truncates to first five, and rejects an empty effective list; no schema maxItems/minItems.",
+        "Wrapper uses PROPERTIES.get(gprop, \"\"): unknown gprop silently becomes web; own Trends accepts only web/news/shopping and rejects mapped youtube/images."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 262,
+          "end_line": 282,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L262-L282"
+        },
+        {
+          "path": "trends_mcp/dfs.py",
+          "start_line": 458,
+          "end_line": 482,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/dfs.py#L458-L482"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "dfs_subregion_interests",
+      "description": "Regionale Nachfrage aus DataForSEO-eigenen Daten ($0,0024) - Zweitmeinung.\n\nFuer 'wo ist das Thema stark?' ist gt_interest_by_region die erste Wahl\n(echte Google-Trends-Map). Dieser Endpunkt ist die guenstigere Zweitquelle\nmit anderer Metrik und mehrwoechigem Verzug - nur fuer einen Quervergleich\nnutzen und Werte nicht mit Google-Trends mischen.\n",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "geo": {
+            "default": "DE",
+            "title": "Geo",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "gprop": {
+            "default": "web",
+            "title": "Gprop",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "dfs_subregion_interestsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Retrieves regional demand from DataForSEO own Trends, explicitly not Google Trends, sorts descending and limits output.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation drops blank keywords, truncates to first five, and rejects an empty effective list; no schema maxItems/minItems.",
+        "Wrapper uses PROPERTIES.get(gprop, \"\"): unknown gprop silently becomes web; own Trends accepts only web/news/shopping and rejects mapped youtube/images.",
+        "Implementation applies max(1, limit) when slicing output; no schema lower bound."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 285,
+          "end_line": 306,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L285-L306"
+        },
+        {
+          "path": "trends_mcp/dfs.py",
+          "start_line": 485,
+          "end_line": 516,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/dfs.py#L485-L516"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "news_search",
+      "description": "Google-News-Suche zu einem Thema -> Schlagzeilen als Content-Ideen (Titel).\n\nErgaenzt die Trends-Analyse um konkrete redaktionelle Aufhaenger: liefert\nsaubere Titel (Quelle abgetrennt), Quelle, Datum, Link sowie haeufige\nBegriffe (idea_keywords). 'when' als Recency-Filter, z. B. '1d', '7d', '24h'.\n",
+      "inputSchema": {
+        "properties": {
+          "thema": {
+            "title": "Thema",
+            "type": "string"
+          },
+          "language": {
+            "default": "de",
+            "title": "Language",
+            "type": "string"
+          },
+          "country": {
+            "default": "DE",
+            "title": "Country",
+            "type": "string"
+          },
+          "when": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "When"
+          },
+          "max_results": {
+            "default": 25,
+            "title": "Max Results",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "thema"
+        ],
+        "title": "news_searchArguments",
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Searches public Google News RSS with optional when query filter; cleans/deduplicates headlines and counts recurring terms; links are Google News redirects.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps max_results to 1..100; no schema bounds."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 313,
+          "end_line": 327,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L313-L327"
+        },
+        {
+          "path": "trends_mcp/news.py",
+          "start_line": 95,
+          "end_line": 124,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/news.py#L95-L124"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "news_headlines",
+      "description": "Aktuelle Top-Schlagzeilen eines Landes oder News-Ressorts.\n\ntopic leer = allgemeine Top-News; sonst Ressort-Kuerzel wie 'TECHNOLOGY',\n'BUSINESS', 'SCIENCE', 'HEALTH', 'ENTERTAINMENT', 'SPORTS'.\n",
+      "inputSchema": {
+        "properties": {
+          "topic": {
+            "default": "",
+            "title": "Topic",
+            "type": "string"
+          },
+          "language": {
+            "default": "de",
+            "title": "Language",
+            "type": "string"
+          },
+          "country": {
+            "default": "DE",
+            "title": "Country",
+            "type": "string"
+          },
+          "max_results": {
+            "default": 25,
+            "title": "Max Results",
+            "type": "integer"
+          }
+        },
+        "title": "news_headlinesArguments",
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Fetches general or section Google News RSS headlines for country/language; cleans and deduplicates titles.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps max_results to 1..100; no schema bounds."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 330,
+          "end_line": 337,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L330-L337"
+        },
+        {
+          "path": "trends_mcp/news.py",
+          "start_line": 127,
+          "end_line": 149,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/news.py#L127-L149"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "yt_search",
+      "description": "YouTube-Videos zu einem Keyword suchen (mit echten View-/Like-Zahlen).\n\norder: 'relevance' | 'date' | 'viewCount' | 'rating' | 'title'.\npublished_after: ISO 8601 (z. B. '2026-01-01T00:00:00Z'), fuer 'nur neue'.\nKostet 100 Quota-Einheiten pro Aufruf.\n",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "region": {
+            "default": "DE",
+            "title": "Region",
+            "type": "string"
+          },
+          "language": {
+            "default": "de",
+            "title": "Language",
+            "type": "string"
+          },
+          "max_results": {
+            "default": 25,
+            "title": "Max Results",
+            "type": "integer"
+          },
+          "order": {
+            "default": "relevance",
+            "title": "Order",
+            "type": "string"
+          },
+          "published_after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Published After"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "yt_searchArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Uses YouTube Data API search plus statistics lookup to return videos and actual view/like counts.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps max_results to 1..50; order/date/category validation is delegated to Google API; description values are not schema enums."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 344,
+          "end_line": 362,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L344-L362"
+        },
+        {
+          "path": "trends_mcp/youtube.py",
+          "start_line": 78,
+          "end_line": 124,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/youtube.py#L78-L124"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "yt_trending",
+      "description": "Aktuell populaere YouTube-Videos einer Region (chart=mostPopular).\n\nOptional category_id (siehe yt_categories). Kostet 1 Quota-Einheit.\n",
+      "inputSchema": {
+        "properties": {
+          "region": {
+            "default": "DE",
+            "title": "Region",
+            "type": "string"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Category Id"
+          },
+          "max_results": {
+            "default": 25,
+            "title": "Max Results",
+            "type": "integer"
+          }
+        },
+        "title": "yt_trendingArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Uses YouTube videos.list mostPopular chart with optional category and returns video statistics.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps max_results to 1..50; order/date/category validation is delegated to Google API; description values are not schema enums."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 365,
+          "end_line": 371,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L365-L371"
+        },
+        {
+          "path": "trends_mcp/youtube.py",
+          "start_line": 127,
+          "end_line": 159,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/youtube.py#L127-L159"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "yt_video_stats",
+      "description": "Statistiken (Views/Likes/Kommentare) zu konkreten Video-IDs.",
+      "inputSchema": {
+        "properties": {
+          "video_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Video Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "video_ids"
+        ],
+        "title": "yt_video_statsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Retrieves YouTube snippet and statistics for supplied IDs in batches of 50.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 374,
+          "end_line": 377,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L374-L377"
+        },
+        {
+          "path": "trends_mcp/youtube.py",
+          "start_line": 181,
+          "end_line": 204,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/youtube.py#L181-L204"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "yt_categories",
+      "description": "YouTube-Videokategorien einer Region (fuer yt_trending category_id).",
+      "inputSchema": {
+        "properties": {
+          "region": {
+            "default": "DE",
+            "title": "Region",
+            "type": "string"
+          }
+        },
+        "title": "yt_categoriesArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Lists YouTube video categories for a region.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 380,
+          "end_line": 383,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L380-L383"
+        },
+        {
+          "path": "trends_mcp/youtube.py",
+          "start_line": 207,
+          "end_line": 215,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/youtube.py#L207-L215"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "reddit_search",
+      "description": "Reddit-Beitraege durchsuchen.\n\nsort: 'relevance' | 'hot' | 'top' | 'new' | 'comments'.\ntime_filter: 'hour' | 'day' | 'week' | 'month' | 'year' | 'all'.\nsubreddit='all' sucht global; sonst gezielt (z. B. 'smarthome').\n",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "subreddit": {
+            "default": "all",
+            "title": "Subreddit",
+            "type": "string"
+          },
+          "sort": {
+            "default": "relevance",
+            "title": "Sort",
+            "type": "string"
+          },
+          "time_filter": {
+            "default": "month",
+            "title": "Time Filter",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "reddit_searchArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Searches Reddit posts via PRAW in supplied subreddit or all.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps limit to 1..100 (1..50 for find_subreddits); sort/time_filter validation is delegated to PRAW; documented values are not schema enums."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 390,
+          "end_line": 404,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L390-L404"
+        },
+        {
+          "path": "trends_mcp/reddit_api.py",
+          "start_line": 89,
+          "end_line": 106,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/reddit_api.py#L89-L106"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "reddit_rising",
+      "description": "Aufsteigende Beitraege eines Subreddits (frueher Trend-Indikator).",
+      "inputSchema": {
+        "properties": {
+          "subreddit": {
+            "title": "Subreddit",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "subreddit"
+        ],
+        "title": "reddit_risingArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Lists rising Reddit posts in a subreddit via PRAW.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps limit to 1..100 (1..50 for find_subreddits); sort/time_filter validation is delegated to PRAW; documented values are not schema enums."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 407,
+          "end_line": 410,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L407-L410"
+        },
+        {
+          "path": "trends_mcp/reddit_api.py",
+          "start_line": 110,
+          "end_line": 113,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/reddit_api.py#L110-L113"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "reddit_hot",
+      "description": "Aktuell heisse Beitraege eines Subreddits.",
+      "inputSchema": {
+        "properties": {
+          "subreddit": {
+            "title": "Subreddit",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "subreddit"
+        ],
+        "title": "reddit_hotArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Lists hot Reddit posts in a subreddit via PRAW.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps limit to 1..100 (1..50 for find_subreddits); sort/time_filter validation is delegated to PRAW; documented values are not schema enums."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 413,
+          "end_line": 416,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L413-L416"
+        },
+        {
+          "path": "trends_mcp/reddit_api.py",
+          "start_line": 117,
+          "end_line": 120,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/reddit_api.py#L117-L120"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "reddit_top",
+      "description": "Top-Beitraege eines Subreddits im Zeitfenster (day/week/month/year/all).",
+      "inputSchema": {
+        "properties": {
+          "subreddit": {
+            "title": "Subreddit",
+            "type": "string"
+          },
+          "time_filter": {
+            "default": "week",
+            "title": "Time Filter",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "subreddit"
+        ],
+        "title": "reddit_topArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Lists top Reddit posts in subreddit for supplied time window via PRAW.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps limit to 1..100 (1..50 for find_subreddits); sort/time_filter validation is delegated to PRAW; documented values are not schema enums."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 419,
+          "end_line": 422,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L419-L422"
+        },
+        {
+          "path": "trends_mcp/reddit_api.py",
+          "start_line": 124,
+          "end_line": 130,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/reddit_api.py#L124-L130"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "reddit_find_subreddits",
+      "description": "Passende Subreddits zu einem Thema finden (nach Abonnenten sortiert).",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "limit": {
+            "default": 15,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "reddit_find_subredditsArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Searches subreddits via PRAW, returns metadata and sorts by subscriber count.",
+      "validation_notes": [
+        "Schema reconstructed from registered signature; no explicit enum/bounds/minItems/maxItems/additionalProperties constraints are declared.",
+        "Implementation clamps limit to 1..100 (1..50 for find_subreddits); sort/time_filter validation is delegated to PRAW; documented values are not schema enums."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 425,
+          "end_line": 428,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/server.py#L425-L428"
+        },
+        {
+          "path": "trends_mcp/reddit_api.py",
+          "start_line": 134,
+          "end_line": 148,
+          "url": "https://github.com/david-wulf/trends-mcp-local/blob/1349b49e28a494eb72fd84be7c8ef5a6eab37bf0/trends_mcp/reddit_api.py#L134-L148"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

@@ -1,0 +1,375 @@
+{
+  "repo": "purahmanian/google-trends-mcp",
+  "slug": "purahmanian-google-trends-mcp",
+  "commit": "a505da1ebe99ab78742381d776530b81075e86f4",
+  "source_url": "https://github.com/purahmanian/google-trends-mcp",
+  "subdirectory": null,
+  "extraction_method": "Static source inspection of the sole ListToolsRequestSchema handler; evaluated only its standalone TOOLS literal in a Node VM after removing TypeScript as const assertions, preserving exact advertised descriptions and schemas. Cross-checked all five call dispatch branches, Zod validation and client implementations.",
+  "limitations": [
+    "No remote tools executed; live Google endpoint availability was not verified. Schema extraction evaluates only literal metadata, not a running MCP server."
+  ],
+  "recommendation": "include",
+  "reason": "All five unconditionally registered Google Trends tools have complete advertised schemas and concrete matching implementations.",
+  "tools": [
+    {
+      "name": "interest_over_time",
+      "annotations": {
+        "title": "Interest over time",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Fetch Google Trends interest scores (0-100) for up to 5 search terms over a time range. Returns a time series with one value per term per data point. Useful for spotting seasonality, growth, or decline in search interest.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "terms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 5,
+            "description": "Search terms (1-5)."
+          },
+          "geo": {
+            "type": "string",
+            "default": "",
+            "description": "Two-letter country code (e.g. \"US\") or empty for worldwide."
+          },
+          "timeframe": {
+            "type": "string",
+            "default": "today 12-m",
+            "description": "Trends timeframe string, e.g. \"today 12-m\", \"today 5-y\", \"now 7-d\"."
+          }
+        },
+        "required": [
+          "terms"
+        ]
+      },
+      "domain": "google-trends",
+      "behavior": "Obtains TIMESERIES widget via explore, fetches multiline data, returns tab-separated date/term scores and averages when available.",
+      "validation_notes": [
+        "Handler validates input with Zod independently of the advertised inputSchema; invalid input returns isError text. Zod object strips unknown keys; registered schema does not specify additionalProperties.",
+        "Implementation additionally requires each terms item to be a nonempty string (min length 1), absent from advertised items schema.",
+        "geo and timeframe default to empty string and today 12-m respectively; both accept arbitrary strings locally, with endpoint rejection handled as an error.",
+        "No input permits null. No injected context arguments."
+      ],
+      "sources": [
+        {
+          "path": "src/index.ts",
+          "start_line": 96,
+          "end_line": 132,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L96-L132"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 299,
+          "end_line": 344,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L299-L344"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 37,
+          "end_line": 89,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L37-L89"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 541,
+          "end_line": 572,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L541-L572"
+        },
+        {
+          "path": "src/trends-client.ts",
+          "start_line": 147,
+          "end_line": 207,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/trends-client.ts#L147-L207"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "compare_terms",
+      "annotations": {
+        "title": "Compare search terms",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Compare 2-5 search terms against each other using Google Trends normalized interest scores. Returns the time series, averages per term, and identifies which term has the highest overall interest.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "terms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "maxItems": 5,
+            "description": "Search terms to compare (2-5)."
+          },
+          "geo": {
+            "type": "string",
+            "default": "",
+            "description": "Two-letter country code or empty for worldwide."
+          },
+          "timeframe": {
+            "type": "string",
+            "default": "today 12-m",
+            "description": "Trends timeframe string."
+          }
+        },
+        "required": [
+          "terms"
+        ]
+      },
+      "domain": "google-trends",
+      "behavior": "Obtains shared normalized TIMESERIES for 2-5 terms, returns averages and full timeline; marks first highest-average term as winner when averages exist.",
+      "validation_notes": [
+        "Handler validates input with Zod independently of the advertised inputSchema; invalid input returns isError text. Zod object strips unknown keys; registered schema does not specify additionalProperties.",
+        "Implementation additionally requires each terms item to be a nonempty string (min length 1), absent from advertised items schema.",
+        "geo and timeframe default to empty string and today 12-m respectively; both accept arbitrary strings locally, with endpoint rejection handled as an error.",
+        "No input permits null. No injected context arguments."
+      ],
+      "sources": [
+        {
+          "path": "src/index.ts",
+          "start_line": 133,
+          "end_line": 167,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L133-L167"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 346,
+          "end_line": 400,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L346-L400"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 37,
+          "end_line": 89,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L37-L89"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 541,
+          "end_line": 572,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L541-L572"
+        },
+        {
+          "path": "src/trends-client.ts",
+          "start_line": 147,
+          "end_line": 207,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/trends-client.ts#L147-L207"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "related_queries",
+      "annotations": {
+        "title": "Related queries",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Get rising and top related search queries for a given term from Google Trends. Rising queries have seen the largest recent growth; top queries have the most overall volume. Useful for discovering adjacent keywords and content ideas.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string",
+            "description": "The search term to get related queries for."
+          },
+          "geo": {
+            "type": "string",
+            "default": "",
+            "description": "Two-letter country code or empty for worldwide."
+          },
+          "timeframe": {
+            "type": "string",
+            "default": "today 12-m",
+            "description": "Trends timeframe string."
+          }
+        },
+        "required": [
+          "term"
+        ]
+      },
+      "domain": "google-trends",
+      "behavior": "Obtains RELATED_QUERIES widget via explore, returns up to 25 top queries and 25 rising queries with values.",
+      "validation_notes": [
+        "Handler validates input with Zod independently of the advertised inputSchema; invalid input returns isError text. Zod object strips unknown keys; registered schema does not specify additionalProperties.",
+        "Implementation additionally requires term length at least 1, absent from advertised schema.",
+        "geo and timeframe default to empty string and today 12-m respectively; both accept arbitrary strings locally, with endpoint rejection handled as an error.",
+        "No input permits null. No injected context arguments."
+      ],
+      "sources": [
+        {
+          "path": "src/index.ts",
+          "start_line": 168,
+          "end_line": 199,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L168-L199"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 402,
+          "end_line": 447,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L402-L447"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 37,
+          "end_line": 89,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L37-L89"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 541,
+          "end_line": 572,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L541-L572"
+        },
+        {
+          "path": "src/trends-client.ts",
+          "start_line": 222,
+          "end_line": 239,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/trends-client.ts#L222-L239"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trending_now",
+      "annotations": {
+        "title": "Trending searches now",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Get today's daily trending searches for a country from Google Trends. Returns the top trending queries with estimated traffic and linked news articles.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "geo": {
+            "type": "string",
+            "default": "US",
+            "description": "Two-letter country code (e.g. \"US\", \"GB\", \"IN\", \"AU\")."
+          }
+        },
+        "required": []
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches current Google Trends trending RSS for uppercased country code, adapts feed into one day using current UTC date, returns first 20 queries and estimated traffic with first news article title/source. Article URLs are parsed but not returned.",
+      "validation_notes": [
+        "Handler validates input with Zod independently of the advertised inputSchema; invalid input returns isError text. Zod object strips unknown keys; registered schema does not specify additionalProperties.",
+        "Implementation additionally requires geo length exactly 2, absent from advertised schema; no ISO-code enumeration or regex.",
+        "geo defaults to US; country code is uppercased by RSS client.",
+        "No input permits null. No injected context arguments."
+      ],
+      "sources": [
+        {
+          "path": "src/index.ts",
+          "start_line": 200,
+          "end_line": 222,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L200-L222"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 449,
+          "end_line": 483,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L449-L483"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 37,
+          "end_line": 89,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L37-L89"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 541,
+          "end_line": 572,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L541-L572"
+        },
+        {
+          "path": "src/trends-client.ts",
+          "start_line": 309,
+          "end_line": 373,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/trends-client.ts#L309-L373"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "interest_by_region",
+      "annotations": {
+        "title": "Interest by region",
+        "readOnlyHint": true,
+        "openWorldHint": true
+      },
+      "description": "Get Google Trends interest scores broken down by region (sub-country or country, depending on the geo parameter). Returns top regions with the highest relative interest for the given term.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string",
+            "description": "The search term to get regional interest for."
+          },
+          "geo": {
+            "type": "string",
+            "default": "",
+            "description": "Two-letter country code to drill into sub-regions (e.g. \"US\" gives US states), or empty for worldwide country-level breakdown."
+          },
+          "timeframe": {
+            "type": "string",
+            "default": "today 12-m",
+            "description": "Trends timeframe string."
+          }
+        },
+        "required": [
+          "term"
+        ]
+      },
+      "domain": "google-trends",
+      "behavior": "Obtains GEO_MAP widget via explore, fetches comparedgeo data, sorts first score descending and returns up to 30 regions with name, code, score.",
+      "validation_notes": [
+        "Handler validates input with Zod independently of the advertised inputSchema; invalid input returns isError text. Zod object strips unknown keys; registered schema does not specify additionalProperties.",
+        "Implementation additionally requires term length at least 1, absent from advertised schema.",
+        "geo and timeframe default to empty string and today 12-m respectively; both accept arbitrary strings locally, with endpoint rejection handled as an error.",
+        "No input permits null. No injected context arguments."
+      ],
+      "sources": [
+        {
+          "path": "src/index.ts",
+          "start_line": 223,
+          "end_line": 256,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L223-L256"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 485,
+          "end_line": 523,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L485-L523"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 37,
+          "end_line": 89,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L37-L89"
+        },
+        {
+          "path": "src/index.ts",
+          "start_line": 541,
+          "end_line": 572,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/index.ts#L541-L572"
+        },
+        {
+          "path": "src/trends-client.ts",
+          "start_line": 256,
+          "end_line": 273,
+          "url": "https://github.com/purahmanian/google-trends-mcp/blob/a505da1ebe99ab78742381d776530b81075e86f4/src/trends-client.ts#L256-L273"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

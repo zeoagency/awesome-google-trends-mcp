@@ -4,6 +4,7 @@ scripts/
 *.py
 *.pyc
 __pycache__/
+!maintenance/*.py
 
 # Node, linter, and temporary build caches
 node_modules/

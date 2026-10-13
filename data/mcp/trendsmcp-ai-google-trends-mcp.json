@@ -1,0 +1,304 @@
+{
+  "repo": "trendsmcp-ai/google-trends-mcp",
+  "slug": "trendsmcp-ai-google-trends-mcp",
+  "commit": "a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2",
+  "source_url": "https://github.com/trendsmcp-ai/google-trends-mcp",
+  "subdirectory": null,
+  "extraction_method": "Imported src/trends_mcp_server/server.py and called await mcp.list_tools() locally without invoking any tools. Raw result saved to sources/trendsmcp-ai-google-trends-mcp/local-tools-list.json; mcp 1.30.0 and Pydantic 2.13.5. Inspected all registration/forwarder code plus server.json, README and anonymous public provider documentation.",
+  "limitations": [
+    "The repository contains only a stdio REST adapter, not hosted MCP server code. Hosted tools/list was not requested; no remote tool calls or credential access occurred. The statement that definitions mirror hosted MCP is therefore unverified.",
+    "Dependencies are version ranges without a lockfile; schema output reflects installed mcp 1.30.0 / Pydantic 2.13.5.",
+    "Public hosted docs describe all three names and REST/MCP distinctions but do not supply a full registered hosted inputSchema or verbatim hosted descriptions. No hosted definition is inferred or merged into verified local tools.",
+    "Tools are multi-domain multiplexers. The single domain field is google-trends because every tool supports Google Trends; they also support news and other platform data."
+  ],
+  "recommendation": "include",
+  "reason": "All three local adapter tools have complete verified registered schemas and Google Trends behavior. Include as local stdio adapter; hosted variant remains unverified.",
+  "tools": [
+    {
+      "name": "get_growth",
+      "description": "Point-to-point growth for a keyword on one or more sources. Each window is a preset string (12M, 3M, YTD, and the other listed periods). Values are on a 0-100 scale, plus absolute volume when available. Prefer this over get_time_series for growth questions. app downloads and app rankings are keyword sources (Android bundle ID). They are not the App Store / Google Play live boards on get_top_trends. If the request is rate limited or the monthly quota is used up, tell the user their plan limit is reached.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "What to look up. The string format is required by source. Standard sources (google search, google images, google news, google shopping, youtube, wikipedia, tiktok, reddit, amazon, news sentiment, news volume): any name or phrase, e.g. 'nike'. npm: exact npmjs.com package name, case-sensitive. Right: 'react', '@babel/core'. Wrong: 'React', 'React.js'. python: exact PyPI project name. Right: 'pandas', 'requests'. Wrong: 'Pandas'. steam: game display name in plain English, not a Steam App ID. Right: 'Elden Ring', 'CS2'. First Steam store search result wins, so use an unambiguous name. app downloads and app rankings: Android bundle ID only (the id= value on Google Play). Right: 'com.openai.chatgpt', 'com.whatsapp'. Wrong: 'ChatGPT', 'WhatsApp', an iOS App Store ID, or a bundle ID that is not Android. Find it at play.google.com/store/apps/details?id=THIS_PART. If the request includes app downloads or app rankings with other sources, keyword must still be the Android bundle ID.",
+            "title": "Keyword",
+            "type": "string"
+          },
+          "source": {
+            "description": "One source, or comma-separated sources (e.g. 'amazon, tiktok, youtube'). Valid: 'google search', 'google images', 'google news', 'google shopping', 'youtube', 'wikipedia', 'tiktok', 'reddit', 'amazon', 'news sentiment', 'news volume', 'npm', 'python', 'steam', 'app downloads', 'app rankings'.",
+            "title": "Source",
+            "type": "string"
+          },
+          "percent_growth": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Growth windows. Default if omitted: ['12M']. Each item must be a preset string: '7D', '1W', '14D', '2W', '30D', '1M', '2M', '3M', '6M', '9M', '12M', '1Y', '18M', '24M', '2Y', '36M', '3Y', '48M', '4Y', '60M', '5Y', 'MTD', 'QTD', 'YTD'. Every preset is a two-date comparison.",
+            "title": "Percent Growth"
+          }
+        },
+        "required": [
+          "keyword",
+          "source"
+        ],
+        "title": "get_growthArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_growthOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "domain": "google-trends",
+      "behavior": "Forwards keyword, source and percent_growth as mode=get_growth to the hosted REST API, then JSON-serializes its response. Supports Google search/images/news/shopping/YouTube and other attention sources; computation occurs remotely.",
+      "validation_notes": [
+        "Local adapter validates parameter types via FastMCP/Pydantic; source/type values and keyword format requirements appear only in descriptions, without enum/pattern schema constraints or local validation.",
+        "Actual upstream data retrieval and validation are not public in this repository and were not exercised. All calls require TRENDSMCP_API_KEY; local tools/list does not.",
+        "No additionalProperties constraint is specified in the generated input schema.",
+        "Schema default for percent_growth is null, not [\"12M\"]. Implementation replaces omitted/null/empty list with [\"12M\"]. Presets are described but not an enum; arbitrary strings pass local schema. Date objects are not allowed by list[str] input schema."
+      ],
+      "sources": [
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 115,
+          "end_line": 155,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        },
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 36,
+          "end_line": 71,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        },
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 74,
+          "end_line": 112,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        }
+      ],
+      "verified": true,
+      "variant": "local-stdio-adapter"
+    },
+    {
+      "name": "get_time_series",
+      "description": "Full historical series for one keyword and one source (0-100 values, plus volume when available). Use for charting or custom math. Not for live 'what's trending now' boards (use get_top_trends). For most growth questions, use get_growth. If the request is rate limited or the monthly quota is used up, tell the user their plan limit is reached.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "What to look up. The string format is required by source. Standard sources (google search, google images, google news, google shopping, youtube, wikipedia, tiktok, reddit, amazon, news sentiment, news volume): any name or phrase, e.g. 'tesla'. npm: exact npmjs.com package name, case-sensitive. Right: 'react', '@babel/core'. Wrong: 'React', 'React.js'. python: exact PyPI project name. Right: 'pandas', 'requests'. Wrong: 'Pandas'. steam: game display name in plain English, not a Steam App ID. Right: 'Elden Ring', 'CS2'. First Steam store search result wins, so use an unambiguous name. app downloads and app rankings: Android bundle ID only (the id= value on Google Play). Right: 'com.openai.chatgpt', 'com.whatsapp'. Wrong: 'ChatGPT', 'WhatsApp', an iOS App Store ID, or a bundle ID that is not Android. Find it at play.google.com/store/apps/details?id=THIS_PART.",
+            "title": "Keyword",
+            "type": "string"
+          },
+          "source": {
+            "description": "Exactly one source per request. Valid: 'google search', 'google images', 'google news', 'google shopping', 'youtube', 'wikipedia', 'tiktok', 'reddit', 'amazon', 'news sentiment', 'news volume', 'npm', 'python', 'steam', 'app downloads', 'app rankings'.",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword",
+          "source"
+        ],
+        "title": "get_time_seriesArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_time_seriesOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "domain": "google-trends",
+      "behavior": "Forwards keyword and source as mode=get_time_series to the hosted REST API, then JSON-serializes its response; Google Trends and non-Google historical series are supplied by the provider.",
+      "validation_notes": [
+        "Local adapter validates parameter types via FastMCP/Pydantic; source/type values and keyword format requirements appear only in descriptions, without enum/pattern schema constraints or local validation.",
+        "Actual upstream data retrieval and validation are not public in this repository and were not exercised. All calls require TRENDSMCP_API_KEY; local tools/list does not.",
+        "No additionalProperties constraint is specified in the generated input schema.",
+        "Exactly one source is a descriptive requirement, not a local enforced constraint. data_mode is REST-only in public docs and is not a registered MCP input."
+      ],
+      "sources": [
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 158,
+          "end_line": 174,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        },
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 36,
+          "end_line": 71,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        },
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 74,
+          "end_line": 112,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        }
+      ],
+      "verified": true,
+      "variant": "local-stdio-adapter"
+    },
+    {
+      "name": "get_top_trends",
+      "description": "Live top-trending board for exactly one feed type. No keyword. For 'Amazon Best Sellers by Category', 'Google Trends by Category', 'Top Websites', and 'Substack by Category', always pass category. Default sort is current rank. Use sort='rank_change' for climbers vs a prior snapshot (window 1d, 3d, 7d, 14d, or 30d). App Store Top Free, App Store Top Paid, and Google Play are live store boards, not keyword lookups. For an app's history use get_growth or get_time_series with source app downloads or app rankings and an Android bundle ID. Do not use get_time_series for live boards. If the request is rate limited or the monthly quota is used up, tell the user their plan limit is reached.",
+      "inputSchema": {
+        "properties": {
+          "type": {
+            "description": "Exactly one live feed. Valid: 'Amazon Best Sellers Top Rated', 'Amazon Best Sellers by Category', 'App Store Top Free', 'App Store Top Paid', 'GitHub', 'Google News Top News', 'Google Play', 'Google Trends', 'Google Trends by Category', 'IMDb MOVIEmeter', 'Open Library Trending Books', 'Reddit Hot Posts', 'Reddit World News', 'Top Websites', 'Spotify Top Podcasts', 'Steam Most Played', 'Substack', 'Substack by Category', 'TikTok Trending Hashtags', 'TikTok Trending Searches', 'Wikipedia Trending', 'X (Twitter) Trending', 'YouTube Trending'.",
+            "title": "Type",
+            "type": "string"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Pass this whenever type is 'Amazon Best Sellers by Category', 'Google Trends by Category', 'Top Websites', or 'Substack by Category'. Use the official name. Without it those feeds mix every board. Only omit on a first pull to learn the official names.",
+            "title": "Category"
+          },
+          "limit": {
+            "default": 25,
+            "description": "Max rows to return. Default 25, min 1, max 200.",
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "description": "Rows to skip for pagination. Default 0.",
+            "title": "Offset",
+            "type": "integer"
+          },
+          "sort": {
+            "default": "rank",
+            "description": "How to rank the board. 'rank' (default): current leaders. 'rank_change': biggest climbers vs a prior snapshot. Mover rows include rank, keyword, prev_rank, and rank_change.",
+            "title": "Sort",
+            "type": "string"
+          },
+          "window": {
+            "default": "30d",
+            "description": "Lookback used only when sort is 'rank_change'. One of '1d', '3d', '7d', '14d', '30d'. Default '30d'. Short windows only work on daily feeds; weekly and monthly feeds return a note pointing to a longer window.",
+            "title": "Window",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "get_top_trendsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_top_trendsOutput",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "domain": "google-trends",
+      "behavior": "Forwards one type with limit, offset, sort and window as mode=get_top_trends to the hosted REST API; includes category only when truthy, then JSON-serializes the response. Google Trends and Google Trends by Category are supported along with news and other platform boards.",
+      "validation_notes": [
+        "Local adapter validates parameter types via FastMCP/Pydantic; source/type values and keyword format requirements appear only in descriptions, without enum/pattern schema constraints or local validation.",
+        "Actual upstream data retrieval and validation are not public in this repository and were not exercised. All calls require TRENDSMCP_API_KEY; local tools/list does not.",
+        "No additionalProperties constraint is specified in the generated input schema.",
+        "limit has no minimum/maximum schema constraints despite description saying min 1/max 200. offset has no minimum. sort/window/type have no enum. category is optional nullable, and no conditional-required schema exists; empty strings/null are omitted from forwarded body."
+      ],
+      "sources": [
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 177,
+          "end_line": 248,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        },
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 36,
+          "end_line": 71,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        },
+        {
+          "path": "src/trends_mcp_server/server.py",
+          "start_line": 74,
+          "end_line": 112,
+          "url": "https://github.com/trendsmcp-ai/google-trends-mcp/blob/a136fa9d5a2552dc0f67a8e6b6297f027eacb7d2/src/trends_mcp_server/server.py"
+        }
+      ],
+      "verified": true,
+      "variant": "local-stdio-adapter"
+    }
+  ],
+  "unverified_variants": [
+    {
+      "variant": "hosted-streamable-http",
+      "endpoint": "https://api.trendsmcp.ai/mcp",
+      "verified": false,
+      "documented_tool_names": [
+        "get_growth",
+        "get_time_series",
+        "get_top_trends"
+      ],
+      "missing_evidence": [
+        "Hosted tools/list input schemas and exact descriptions",
+        "Public hosted implementation code"
+      ],
+      "public_documentation_url": "https://www.trendsmcp.ai/docs",
+      "notes": [
+        "Public docs permit arbitrary whole-number D/W/M/Y growth strings up to five years, unlike the local description listing presets; local schema itself accepts arbitrary strings.",
+        "Custom date objects and data_mode are REST-only in current hosted docs, so neither is added to MCP schemas.",
+        "README lists TikTok Trending Hashtags by Category but local registered type description does not; this is not a separate registered tool and type is not an enum."
+      ]
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

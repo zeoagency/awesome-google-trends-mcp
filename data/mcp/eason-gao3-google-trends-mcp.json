@@ -1,0 +1,314 @@
+{
+  "repo": "Eason-Gao3/google-trends-mcp",
+  "slug": "eason-gao3-google-trends-mcp",
+  "commit": "c173efbb941c64f204b329eba97c96b5ddb27db1",
+  "source_url": "https://github.com/Eason-Gao3/google-trends-mcp",
+  "subdirectory": null,
+  "extraction_method": "AST-isolated actual FastMCP registration: copied exact tool decorators, signatures, defaults and docstrings plus required constant/server assignments into a local module; replaced implementation bodies with inert returns; obtained schemas with FastMCP.list_tools(). No tool calls executed. Runtime mcp 1.30.0, Pydantic 2.13.5.",
+  "limitations": [
+    "Repository specifies mcp>=1.2.0 and unpinned dependencies; introspected with installed mcp 1.30.0/Pydantic 2.13.5, so another dependency version may emit different incidental schema details.",
+    "Full server import was unavailable because pandas is not installed; AST isolation preserves every registration-relevant element and avoids provider/web runtime imports.",
+    "Schemas and implementation verified from source; live Google Trends/provider behavior was not exercised."
+  ],
+  "recommendation": "include",
+  "reason": "Four unconditional actual MCP registrations and complete input schemas established; three Trends execution tools and one task-status management tool. Async stdio database initialization caveat is recorded.",
+  "tools": [
+    {
+      "name": "compare_keywords",
+      "description": "对比最多 5 个关键词在 Google Trends 上的时间序列热度。",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "timeframe": {
+            "default": "today 5-y",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "drop_partial": {
+            "default": true,
+            "title": "Drop Partial",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "compare_keywordsArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches Google Trends interest-over-time via configured trendspy (default) or pytrends provider, optionally removes partial rows, returns rows, Markdown table, summary, and metadata.",
+      "validation_notes": [
+        "Input schema has no keyword count/item-length bounds, geo pattern, timeframe enum, or TTL bounds; these must not be inferred from prose.",
+        "Implementation strips timeframe and requires nonempty value; geo is stripped/uppercased and must be empty or match [A-Z0-9-]+.",
+        "Rate limits are enabled only via GOOGLE_TRENDS_MCP_RATE_LIMIT; compare is 10/60s, research and async share 5/3600s.",
+        "Keywords are trimmed, blank entries removed, case-insensitively deduplicated; resulting count must be 1–5."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 1828,
+          "end_line": 1854,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1828-L1854"
+        },
+        {
+          "path": "server.py",
+          "start_line": 758,
+          "end_line": 804,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L758-L804"
+        },
+        {
+          "path": "server.py",
+          "start_line": 1412,
+          "end_line": 1504,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1412-L1504"
+        },
+        {
+          "path": "server.py",
+          "start_line": 923,
+          "end_line": 1017,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L923-L1017"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "research_keywords",
+      "description": "多关键词批量调研，支持最多 50 个关键词，使用 anchor 关键词进行跨批次归一化。",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "timeframe": {
+            "default": "today 5-y",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "anchor_keyword": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Anchor Keyword"
+          },
+          "drop_partial": {
+            "default": true,
+            "title": "Drop Partial",
+            "type": "boolean"
+          },
+          "cache_ttl_seconds": {
+            "default": 900,
+            "title": "Cache Ttl Seconds",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "research_keywordsArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches up to 50 cleaned keywords in batches sharing an anchor, normalizes cross-batch metrics against anchor baseline, and returns metrics, rankings, batches, Markdown, summary, metadata and cache statistics.",
+      "validation_notes": [
+        "Input schema has no keyword count/item-length bounds, geo pattern, timeframe enum, or TTL bounds; these must not be inferred from prose.",
+        "Implementation strips timeframe and requires nonempty value; geo is stripped/uppercased and must be empty or match [A-Z0-9-]+.",
+        "Rate limits are enabled only via GOOGLE_TRENDS_MCP_RATE_LIMIT; compare is 10/60s, research and async share 5/3600s.",
+        "Keywords are trimmed, blank entries removed, case-insensitively deduplicated; resulting count must be 1–50. Anchor defaults to first cleaned keyword; a nonempty new anchor is appended and must fit within the 50-keyword limit.",
+        "cache_ttl_seconds is an unconstrained integer; no positive-value validation is implemented."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 1857,
+          "end_line": 1892,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1857-L1892"
+        },
+        {
+          "path": "server.py",
+          "start_line": 1575,
+          "end_line": 1621,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1575-L1621"
+        },
+        {
+          "path": "server.py",
+          "start_line": 1661,
+          "end_line": 1825,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1661-L1825"
+        },
+        {
+          "path": "server.py",
+          "start_line": 1020,
+          "end_line": 1154,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1020-L1154"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "research_keywords_async",
+      "description": "提交批量调研任务，立即返回 task_id。适用于 5+ 关键词的长任务。",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "timeframe": {
+            "default": "today 5-y",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "anchor_keyword": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Anchor Keyword"
+          },
+          "drop_partial": {
+            "default": true,
+            "title": "Drop Partial",
+            "type": "boolean"
+          },
+          "cache_ttl_seconds": {
+            "default": 900,
+            "title": "Cache Ttl Seconds",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "research_keywords_asyncArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Normalizes research keywords, persists a pending SQLite task, submits the same research implementation to a background executor, and immediately returns task_id, pending status, estimated_seconds and keyword_count.",
+      "validation_notes": [
+        "Same research keyword/anchor normalization and 1–50 implementation count limit as research_keywords.",
+        "Timeframe and geo validation happens in the background research task after submission, not before returning task_id.",
+        "cache_ttl_seconds is an unconstrained integer; no positive-value validation is implemented.",
+        "SQLite research_tasks schema is initialized by web lifespan only; plain stdio mode does not call init_database, so async tools require an already initialized database."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 1976,
+          "end_line": 2032,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1976-L2032"
+        },
+        {
+          "path": "server.py",
+          "start_line": 1575,
+          "end_line": 1621,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1575-L1621"
+        },
+        {
+          "path": "server.py",
+          "start_line": 1921,
+          "end_line": 1973,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L1921-L1973"
+        },
+        {
+          "path": "server.py",
+          "start_line": 390,
+          "end_line": 469,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L390-L469"
+        },
+        {
+          "path": "server.py",
+          "start_line": 2939,
+          "end_line": 2950,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L2939-L2950"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_research_task",
+      "description": "查询异步调研任务的进度或拉取结果。",
+      "inputSchema": {
+        "properties": {
+          "task_id": {
+            "title": "Task Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id"
+        ],
+        "title": "get_research_taskArguments",
+        "type": "object"
+      },
+      "domain": "server-management",
+      "behavior": "Looks up a SQLite research task and returns status/progress, completed research result or failure error; unknown IDs return not_found.",
+      "validation_notes": [
+        "task_id has no format or length restriction; lookup uses a SQL parameter.",
+        "No task ownership filter is present in this lookup.",
+        "SQLite research_tasks schema is initialized by web lifespan only; plain stdio mode requires an already initialized database."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 2035,
+          "end_line": 2061,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L2035-L2061"
+        },
+        {
+          "path": "server.py",
+          "start_line": 390,
+          "end_line": 469,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L390-L469"
+        },
+        {
+          "path": "server.py",
+          "start_line": 2939,
+          "end_line": 2950,
+          "url": "https://github.com/Eason-Gao3/google-trends-mcp/blob/c173efbb941c64f204b329eba97c96b5ddb27db1/server.py#L2939-L2950"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

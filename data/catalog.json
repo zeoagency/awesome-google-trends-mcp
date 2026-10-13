@@ -1,0 +1,382 @@
+{
+  "reviewed": "2026-10-13",
+  "groups": [
+    {
+      "id": "interest",
+      "title": "Measure keyword interest and growth",
+      "summary": "Fetch keyword time series, compare terms on a shared scale, or calculate changes in interest."
+    },
+    {
+      "id": "discovery",
+      "title": "Explore topics, regions and related demand",
+      "summary": "Resolve topic IDs, inspect regional interest, and discover related queries or category demand."
+    },
+    {
+      "id": "batch",
+      "title": "Research keyword batches",
+      "summary": "Normalize keyword batches and submit research jobs for later retrieval."
+    },
+    {
+      "id": "live",
+      "title": "Discover live trends and research candidates",
+      "summary": "Read current searches and their news context, or collect candidates for local research."
+    },
+    {
+      "id": "history",
+      "title": "Track changes and query saved history",
+      "summary": "Record observations, inspect changes, and analyze data retained by the server."
+    },
+    {
+      "id": "bigquery",
+      "title": "Query published weekly rankings",
+      "summary": "Read top and rising terms from Google’s public BigQuery tables; coverage is limited to recorded terms."
+    }
+  ],
+  "entries": [
+    {
+      "slug": "akzar1el-mcp-trendpulse",
+      "included": true,
+      "group": "discovery",
+      "summary": "Explore keyword growth, related queries, topic IDs, regional interest, and hosted SEO opportunity research.",
+      "featured": [
+        {
+          "name": "get_related_queries",
+          "surface": "community"
+        },
+        {
+          "name": "get_interest_by_region",
+          "surface": "community"
+        },
+        {
+          "name": "find_seo_opportunities",
+          "surface": "hosted"
+        }
+      ],
+      "notes": [
+        "Community and hosted registrations are separate server surfaces: 16 community tools and 6 hosted tools."
+      ],
+      "count_label": "16 community + 6 hosted tools"
+    },
+    {
+      "slug": "asgard-google-trends-tw",
+      "included": true,
+      "group": "discovery",
+      "summary": "Explore keyword time series, regional interest, and topic suggestions with configurable Taiwan defaults.",
+      "featured": [
+        {
+          "name": "tw_interest_by_region"
+        },
+        {
+          "name": "tw_keyword_suggestions"
+        }
+      ],
+      "notes": [
+        "Daily and realtime search tools rely on legacy pytrends endpoints; they are registered, but current upstream availability was not tested."
+      ]
+    },
+    {
+      "slug": "claude-world-trend-pulse",
+      "included": true,
+      "group": "history",
+      "summary": "Save country RSS snapshots, compare local history, measure velocity, and export reports.",
+      "featured": [
+        {
+          "name": "take_snapshot"
+        },
+        {
+          "name": "get_trend_history"
+        },
+        {
+          "name": "get_trend_velocity"
+        }
+      ],
+      "notes": [
+        "Google Trends keyword search is not implemented; search_trends skips that source. Historical analyses use saved snapshots, not Google’s historical keyword-interest series.",
+        "Select google_trends through sources/source when a tool supports source filtering. Content-writing and other-source tools remain documented separately."
+      ]
+    },
+    {
+      "slug": "david-wulf-trends-mcp-local",
+      "included": true,
+      "group": "discovery",
+      "summary": "Resolve topic IDs, compare search properties, and discover category or regional demand.",
+      "featured": [
+        {
+          "name": "gt_resolve_topic"
+        },
+        {
+          "name": "gt_topic_across_properties"
+        },
+        {
+          "name": "gt_discover_category"
+        }
+      ],
+      "notes": [
+        "Google Trends Explore supports trendspy or DataForSEO backends; current trending searches always use trendspy. DataForSEO’s own demography/subregion datasets are not Google Trends.",
+        "Default locale is German/DE; language and geo are caller parameters where registered."
+      ]
+    },
+    {
+      "slug": "den-indance-google-trends-mcp",
+      "included": true,
+      "group": "interest",
+      "summary": "Compare keyword interest, retrieve related queries, and rank regional interest.",
+      "featured": [
+        {
+          "name": "compare_keywords"
+        },
+        {
+          "name": "get_related_queries"
+        }
+      ],
+      "notes": [
+        "All three Trends tools accept timeframe but do not pass it to the request implementation. The registered default is not an implemented time filter."
+      ]
+    },
+    {
+      "slug": "ducnhd-google-data-mcp",
+      "included": true,
+      "group": "interest",
+      "summary": "Fetch keyword interest or joint comparisons, plus current trending searches.",
+      "featured": [
+        {
+          "name": "google_trends_interest"
+        },
+        {
+          "name": "google_trends_compare"
+        },
+        {
+          "name": "google_trends_trending"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "slug": "eason-gao3-google-trends-mcp",
+      "included": true,
+      "group": "batch",
+      "summary": "Compare terms and normalize larger keyword batches with a shared anchor, synchronously or as saved jobs.",
+      "featured": [
+        {
+          "name": "research_keywords"
+        },
+        {
+          "name": "research_keywords_async"
+        },
+        {
+          "name": "get_research_task"
+        }
+      ],
+      "notes": [
+        "Async submission/status require an initialized research_tasks SQLite table; the stdio entrypoint does not initialize it."
+      ]
+    },
+    {
+      "slug": "flack0x-trendspyg",
+      "included": true,
+      "group": "history",
+      "summary": "Compare live trends across regions, diff fresh observations, and query archived snapshots or keyword interest.",
+      "featured": [
+        {
+          "name": "compare_trending"
+        },
+        {
+          "name": "get_trend_changes"
+        },
+        {
+          "name": "get_trending_history"
+        }
+      ],
+      "notes": [
+        "Historical trending lookup covers only locally recorded observations. Enable archive on fresh fetches to build that history.",
+        "The keyword-interest and full Trending Now CSV tools require a local Chrome browser; RSS tools do not."
+      ]
+    },
+    {
+      "slug": "goncaloaguer-google-trends-mcp",
+      "included": true,
+      "group": "discovery",
+      "summary": "Explore keyword time series, regional interest, related searches, categories, and location codes.",
+      "featured": [
+        {
+          "name": "interest_by_region"
+        },
+        {
+          "name": "search_categories"
+        },
+        {
+          "name": "search_locations"
+        }
+      ],
+      "notes": [
+        "Use the default trendspy backend. The optional official backend is a stub that raises NotImplementedError.",
+        "Related-query and related-topic tools are implemented, but their descriptions warn of upstream quota failures."
+      ]
+    },
+    {
+      "slug": "hasdata-google-trends-mcp",
+      "included": true,
+      "group": "interest",
+      "summary": "Select time series, geographic interest, related queries, or related topics through one hosted tool.",
+      "featured": [
+        {
+          "name": "hasdata_google_trends_search_getTrendsData"
+        }
+      ],
+      "notes": [
+        "The schema was captured from the hosted tools/list endpoint. A HasData API key is required by the connector; hosted execution and validation were not tested."
+      ]
+    },
+    {
+      "slug": "jmanek-google-news-trends-mcp",
+      "included": true,
+      "group": "live",
+      "summary": "Read current Google Trends RSS terms and optional related-news metadata, alongside news-search tools.",
+      "featured": [
+        {
+          "name": "get_trending_terms"
+        }
+      ],
+      "notes": [
+        "The only Google Trends tool is get_trending_terms; the other four tools search or summarize news."
+      ]
+    },
+    {
+      "slug": "jp-caldas-bigquery-google-trends-mcp",
+      "included": true,
+      "group": "bigquery",
+      "summary": "Query top terms, rising terms, or recorded weekly scores for one term and country.",
+      "featured": [
+        {
+          "name": "buscar_termos_em_alta_tool"
+        },
+        {
+          "name": "buscar_termos_emergentes_tool"
+        },
+        {
+          "name": "comparar_termo_tool"
+        }
+      ],
+      "notes": [
+        "Requires a Google Cloud project and application-default credentials. Country values are validated in implementation, not an input-schema enum.",
+        "comparar_termo_tool retrieves one term’s recorded history; it does not compare multiple terms. Registrations provide no descriptions, so the English behavior summaries come from SQL source."
+      ]
+    },
+    {
+      "slug": "lhitches-google-trends-mcp",
+      "included": true,
+      "group": "interest",
+      "summary": "Fetch time series, related queries, regional interest, and current country RSS searches.",
+      "featured": [
+        {
+          "name": "interest_over_time"
+        },
+        {
+          "name": "related_queries"
+        },
+        {
+          "name": "interest_by_region"
+        }
+      ],
+      "notes": [
+        "Requires compatible MCP 1.x. The repository’s unbounded MCP dependency can resolve to incompatible 2.x imports."
+      ]
+    },
+    {
+      "slug": "mvanhorn-google-trends",
+      "included": true,
+      "group": "history",
+      "summary": "Query live interest, regions, and related terms; inspect cached changes, seasonality, and historical trending snapshots.",
+      "featured": [
+        {
+          "name": "trends_changes"
+        },
+        {
+          "name": "trends_seasonality"
+        },
+        {
+          "name": "trends_trending_at"
+        }
+      ],
+      "notes": [
+        "The server exposes 27 registrations, including generated command mirrors; req inputs on low-level endpoints are JSON-encoded strings.",
+        "import always errors. workflow_archive archives zero records, and default sync has no resources. Parent trends/trends_history/workflow tools provide guidance rather than data.",
+        "Local-history tools require retained observations; trends_trending_at does not retrieve arbitrary historical dates from Google."
+      ]
+    },
+    {
+      "slug": "pipeworx-google-trends",
+      "included": true,
+      "group": "live",
+      "summary": "Read country RSS trending searches, traffic lower bounds, and related news through one local tool.",
+      "featured": [
+        {
+          "name": "google_trending_searches",
+          "surface": "local-stdio"
+        }
+      ],
+      "notes": [
+        "The local server has one tool. The documented hosted scoped gateway also exposes 40 shared tools unrelated to Google Trends; their complete schemas are retained for completeness and excluded from capability grouping.",
+        "Hosted gateway registrations were captured through tools/list; shared gateway implementations are not public."
+      ],
+      "count_label": "1 local tool; hosted gateway also documented"
+    },
+    {
+      "slug": "purahmanian-google-trends-mcp",
+      "included": true,
+      "group": "interest",
+      "summary": "Fetch time series, compare terms, inspect related queries or regional interest, and read current RSS searches.",
+      "featured": [
+        {
+          "name": "interest_over_time"
+        },
+        {
+          "name": "compare_terms"
+        },
+        {
+          "name": "related_queries"
+        }
+      ],
+      "notes": [
+        "Advertised JSON Schema and stricter Zod handler validation differ; both are documented without merging them."
+      ]
+    },
+    {
+      "slug": "quadstronaut-socialscour",
+      "included": true,
+      "group": "live",
+      "summary": "Collect US trending candidates and single-keyword research into local runs; MCP returns paths and reads saved summaries.",
+      "featured": [
+        {
+          "name": "discover"
+        }
+      ],
+      "notes": [
+        "ask/discover return paths, not raw Google Trends series. Keyword interest and top related queries are saved as raw files; post summaries do not incorporate those measurements.",
+        "discover can place Google Trends candidate names in a saved summary readable through read_summary; it is not a keyword comparison or region-interest tool.",
+        "Requires reachable Ollama and instantiates other source clients even when Google Trends alone is selected. Experimental Reddit-only prototypes are excluded from the production list."
+      ]
+    },
+    {
+      "slug": "trendsmcp-ai-google-trends-mcp",
+      "included": true,
+      "group": "interest",
+      "summary": "Request hosted keyword series, point-to-point growth, and current overall or category boards.",
+      "featured": [
+        {
+          "name": "get_growth"
+        },
+        {
+          "name": "get_time_series"
+        },
+        {
+          "name": "get_top_trends"
+        }
+      ],
+      "notes": [
+        "Requires a TrendsMCP API key. Local schemas are verified; the hosted MCP endpoint’s schema equivalence is unverified.",
+        "Tools multiplex Google Trends with other sources. Provider retrieval and growth calculations are proprietary; geographic breakdowns are not exposed."
+      ]
+    }
+  ]
+}

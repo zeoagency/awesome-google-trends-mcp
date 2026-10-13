@@ -1,0 +1,1410 @@
+{
+  "repo": "AKzar1el/mcp-trendpulse",
+  "slug": "akzar1el-mcp-trendpulse",
+  "commit": "e9d7788938ac43bb591871c1929a81aa16a38f93",
+  "source_url": "https://github.com/AKzar1el/mcp-trendpulse",
+  "subdirectory": null,
+  "extraction_method": "Offline FastMCP list_tools on AST-selected registration declarations: original model classes, type aliases, decorator arguments, function signatures and return annotations preserved; function bodies replaced with pass solely to avoid provider imports, credentials, lifespans and remote calls. Actual implementations inspected separately.",
+  "limitations": [
+    "Community and hosted are separate server surfaces, not one merged deployment. No live provider calls were made. Installed current compatible FastMCP/Pydantic versions for schema generation rather than full project lock environment."
+  ],
+  "recommendation": "include",
+  "reason": "All 22 registered tools across both distinct surfaces have complete locally generated input schemas and public implementations.",
+  "tools": [
+    {
+      "name": "get_news_by_keyword",
+      "description": "Find recent Google News articles for a free-form keyword or phrase. Use this for ad-hoc subject searches; use get_news_by_topic for a predefined topic category or get_news_by_site for one publisher.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "description": "Search term to find articles.",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "type": "string"
+          },
+          "period": {
+            "default": 7,
+            "description": "Number of days to look back for articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Searches Google News by keyword, downloads/parses articles, optionally summarizes with MCP sampling or local NLP.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 333,
+          "end_line": 382,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L333-L382"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 755,
+          "end_line": 776,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L755-L776"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_news_by_location",
+      "description": "Find recent Google News articles about a place-focused location such as a city, state, or country. Use this when geography is the primary filter; use get_news_by_keyword for general subject searches.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "location": {
+            "description": "Name of city/state/country.",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "type": "string"
+          },
+          "period": {
+            "default": 7,
+            "description": "Number of days to look back for articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "location"
+        ],
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Searches Google News location coverage, parses articles and optionally summarizes them.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 385,
+          "end_line": 434,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L385-L434"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 801,
+          "end_line": 827,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L801-L827"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_news_by_topic",
+      "description": "Find recent Google News articles from a predefined Google News topic category. Use this for topic category browsing such as BUSINESS, TECHNOLOGY, or SPORTS; use get_news_by_keyword for a free-form query.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "topic": {
+            "description": "Topic to search for articles.",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "type": "string"
+          },
+          "period": {
+            "default": 7,
+            "description": "Number of days to look back for articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Searches a predefined Google News topic, parses articles and optionally summarizes them.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 437,
+          "end_line": 486,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L437-L486"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 830,
+          "end_line": 861,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L830-L861"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_top_news",
+      "description": "Return general headline and top-news stories from Google News without a keyword or topic seed. Use this for a broad news snapshot; use the keyword, location, topic, or site tools when the user gives a filter.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "period": {
+            "default": 3,
+            "description": "Number of days to look back for top articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Fetches Google News headlines, parses articles and optionally summarizes them.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 489,
+          "end_line": 536,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L489-L536"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 779,
+          "end_line": 798,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L779-L798"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_trending_terms",
+      "description": "Return terms that are trending now for a geography, optionally with related news metadata. Use this for current trend discovery; use get_trends when the user wants historical interest over time for known keywords.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "geo": {
+            "default": "US",
+            "description": "Geographic target for trending terms. Supports four levels of granularity:\n- Worldwide: empty string ''\n- Country: ISO 3166-1 alpha-2 code, e.g. 'US', 'GB', 'CA'\n- Subdivision (state/province/region): ISO 3166-2 format 'CC-XX' or 'CC-XXX', e.g. 'US-CA' (California), 'BE-BRU' (Brussels)\n- US metro area: bare Nielsen DMA code (numeric string), e.g. '807' (San Francisco Bay Area), '501' (New York City)",
+            "type": "string"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each trend including related news stories.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches Google Trends Trending Now RSS, sorts terms by parsed approximate volume; optionally includes news metadata.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 539,
+          "end_line": 577,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L539-L577"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 872,
+          "end_line": 891,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L872-L891"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_trends",
+      "description": "Return historical Google Trends interest-over-time points for one or more known keywords. Use this for trajectory and comparisons across a timeframe; values are normalized 0-100 interest scores, not absolute search volume. Use get_trending_terms for what is trending now.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 5,
+                "minItems": 1,
+                "type": "array"
+              }
+            ],
+            "description": "Search keyword(s) to analyze; comparison lists support 1-5 keywords."
+          },
+          "source": {
+            "default": "google search",
+            "description": "Search source.",
+            "enum": [
+              "google search",
+              "youtube search",
+              "news search",
+              "image search",
+              "google shopping"
+            ],
+            "type": "string"
+          },
+          "data_mode": {
+            "default": "weekly",
+            "description": "Legacy resolution hint used only when timeframe is omitted.",
+            "enum": [
+              "weekly",
+              "daily",
+              "monthly"
+            ],
+            "type": "string"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic region code (e.g. 'US').",
+            "type": "string"
+          },
+          "timeframe": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Explicit TrendsPy range, for example 'today 12-m', 'today 90-d', 'all', or 'YYYY-MM-DD YYYY-MM-DD'. Overrides data_mode when supplied."
+          },
+          "cat": {
+            "default": 0,
+            "description": "Google Trends category ID; use 0 for all categories or a value from get_categories.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches TrendsPy interest_over_time; removes incomplete points and returns date/value/keyword rows.",
+      "validation_notes": [
+        "Implementation strips keyword whitespace, rejects empty terms and duplicate normalized keywords, and requires 1-5 comparison keywords; hosted comparison schema requires 2-5. These normalization/uniqueness checks are not encoded as uniqueItems in the input schema.",
+        "Omitted/null timeframe maps weekly to today 5-y, daily to today 3-m, monthly to all; explicit timeframe passes through to TrendsPy."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 580,
+          "end_line": 605,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L580-L605"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1095,
+          "end_line": 1138,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1095-L1138"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_growth",
+      "description": "Estimate momentum for one or more known keywords across requested growth windows. Use this when percentage growth is the goal; use get_trends when the user needs the underlying historical time series.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 5,
+                "minItems": 1,
+                "type": "array"
+              }
+            ],
+            "description": "Search keyword(s) to analyze; comparison lists support 1-5 keywords."
+          },
+          "source": {
+            "default": "google search",
+            "description": "Search source.",
+            "enum": [
+              "google search",
+              "youtube search",
+              "news search",
+              "image search",
+              "google shopping"
+            ],
+            "type": "string"
+          },
+          "percent_growth": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Timeframes to calculate growth (e.g. ['3M', '1Y'])."
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic region code (e.g. 'US').",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches a sufficiently long TrendsPy time series and computes average-interest percentage changes for requested windows; zero baseline returns null.",
+      "validation_notes": [
+        "Implementation strips keyword whitespace, rejects empty terms and duplicate normalized keywords, and requires 1-5 comparison keywords; hosted comparison schema requires 2-5. These normalization/uniqueness checks are not encoded as uniqueItems in the input schema.",
+        "Null percent_growth becomes [3M,1Y]. Each supplied string is trimmed/uppercased and must match positive integer plus D/W/M/Y; this pattern is implementation validation, not an input-schema pattern."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 608,
+          "end_line": 628,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L608-L628"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1141,
+          "end_line": 1170,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1141-L1170"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_ranked_trends",
+      "description": "Return currently trending keywords ranked by week-over-week growth or volume. Use this when explicit ranked order matters; use get_top_trends for a simpler current feed and get_trends for historical series.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "source": {
+            "const": "google search",
+            "default": "google search",
+            "description": "Search source.",
+            "type": "string"
+          },
+          "sort": {
+            "default": "wow_pct_change",
+            "description": "Field to sort by.",
+            "enum": [
+              "wow_pct_change",
+              "volume"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of trends to return.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic region code (e.g. 'US').",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches 24-hour Trending Now feed and sorts by provider volume_growth_pct or volume; includes news.",
+      "validation_notes": [
+        "wow_pct_change naming/description does not compute a separate weekly baseline here; it sorts the current provider volume_growth_pct from a 24-hour feed."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 631,
+          "end_line": 654,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L631-L654"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1173,
+          "end_line": 1236,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1173-L1236"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_top_trends",
+      "description": "Return a bounded current topic discovery feed from Google Trends RSS, including related news where available. Use this for current top or daily trends; use get_ranked_trends when explicit ranking by growth or volume matters.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "default": "Google Trends",
+            "description": "Type of trends feed.",
+            "enum": [
+              "Google Trends",
+              "Daily Trends"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of trends to return.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic region code (e.g. 'US').",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Google Trends selects Trending Now RSS; Daily Trends selects 24-hour Trending Now; truncates feed and includes news.",
+      "validation_notes": [
+        "Registered description mentions top or daily RSS; actual Daily Trends implementation calls trending_now(hours=24), whereas Google Trends calls trending_now_by_rss."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 657,
+          "end_line": 678,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L657-L678"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1239,
+          "end_line": 1296,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1239-L1296"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_news_by_site",
+      "description": "Find recent Google News articles from one publisher domain. Use this when the user wants source-specific coverage; use get_news_by_keyword for cross-publisher subject search.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "site": {
+            "description": "Domain of the news site, e.g. 'cnn.com'.",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "type": "string"
+          },
+          "period": {
+            "default": 7,
+            "description": "Number of days to look back for articles.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_results": {
+            "default": 10,
+            "description": "Maximum number of results to return.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for each article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "site"
+        ],
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Searches Google News for a publisher domain, parses articles and optionally summarizes them.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 681,
+          "end_line": 730,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L681-L730"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1299,
+          "end_line": 1318,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1299-L1318"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_article_content",
+      "description": "Download and parse one specific news article when you already have an article URL. Use it to retrieve article text or metadata or summarize that URL; do not use it for discovery - use the news search tools instead.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "description": "The URL of the news article to download and parse.",
+            "type": "string"
+          },
+          "full_data": {
+            "default": false,
+            "description": "Return full data for the article. If False a summary should be created by setting the summarize flag",
+            "type": "boolean"
+          },
+          "summarize": {
+            "default": true,
+            "description": "Generate a summary of the article, will first try LLM Sampling but if unavailable will use nlp",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "domain": "news",
+      "behavior": "Validates HTTP(S) URL and safe public targets, downloads/parses a specific article, optionally summarizes; returns null if unavailable.",
+      "validation_notes": [
+        "Schema URL is an unrestricted string. Implementation rejects whitespace/control characters, non-HTTP(S), missing host, embedded credentials and invalid ports; downloader separately rejects nonpublic addresses and unsafe redirects."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 733,
+          "end_line": 764,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L733-L764"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_interest_by_region",
+      "description": "Return geographic Google Trends interest for one or more known keywords at country, region, city, or DMA resolution. Use this to compare where demand is strongest; use get_trends for interest over time instead.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keywords": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 5,
+                "minItems": 1,
+                "type": "array"
+              }
+            ],
+            "description": "Search keyword(s) to analyze."
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Timeframe for search volume analysis (e.g., 'today 12-m').",
+            "type": "string"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic region code (e.g. 'US' or empty '' for worldwide).",
+            "type": "string"
+          },
+          "cat": {
+            "default": 0,
+            "description": "Category ID (default: 0 for all).",
+            "type": "integer"
+          },
+          "gprop": {
+            "default": "",
+            "description": "Google property filter.",
+            "enum": [
+              "",
+              "youtube",
+              "news",
+              "images",
+              "froogle"
+            ],
+            "type": "string"
+          },
+          "resolution": {
+            "default": "REGION",
+            "description": "Geographic resolution.",
+            "enum": [
+              "COUNTRY",
+              "REGION",
+              "CITY",
+              "DMA"
+            ],
+            "type": "string"
+          },
+          "inc_low_vol": {
+            "default": false,
+            "description": "Include regions with low search volume.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches TrendsPy interest_by_region and returns names/codes/coordinates plus per-keyword interest.",
+      "validation_notes": [
+        "Implementation strips keyword whitespace, rejects empty terms and duplicate normalized keywords, and requires 1-5 comparison keywords; hosted comparison schema requires 2-5. These normalization/uniqueness checks are not encoded as uniqueItems in the input schema."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 767,
+          "end_line": 799,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L767-L799"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1321,
+          "end_line": 1366,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1321-L1366"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_related_queries",
+      "description": "Return top and rising literal search queries related to one seed keyword. Use this for query expansion; use get_related_topics for topic entities or get_suggestions for autocomplete candidates.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "description": "Search keyword to analyze.",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Timeframe for search volume analysis (e.g., 'today 12-m').",
+            "type": "string"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic region code (e.g. 'US').",
+            "type": "string"
+          },
+          "cat": {
+            "default": 0,
+            "description": "Category ID (default: 0 for all).",
+            "type": "integer"
+          },
+          "gprop": {
+            "default": "",
+            "description": "Google property filter.",
+            "enum": [
+              "",
+              "youtube",
+              "news",
+              "images",
+              "froogle"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches top/rising TrendsPy queries for one seed, with unavailable-response retry.",
+      "validation_notes": [
+        "Implementation trims the seed and rejects whitespace-only input through provider validation, in addition to registered string constraints."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 802,
+          "end_line": 830,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L802-L830"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1369,
+          "end_line": 1400,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1369-L1400"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_related_topics",
+      "description": "Return top and rising Google Trends topic entities related to one seed keyword. Use this for entity or topic expansion; use get_related_queries for literal search queries.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "description": "Search keyword to analyze.",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Timeframe for search volume analysis (e.g., 'today 12-m').",
+            "type": "string"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic region code (e.g. 'US').",
+            "type": "string"
+          },
+          "cat": {
+            "default": 0,
+            "description": "Category ID (default: 0 for all).",
+            "type": "integer"
+          },
+          "gprop": {
+            "default": "",
+            "description": "Google property filter.",
+            "enum": [
+              "",
+              "youtube",
+              "news",
+              "images",
+              "froogle"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches top/rising TrendsPy topic entities for one seed.",
+      "validation_notes": [
+        "Implementation trims the seed and rejects whitespace-only input through provider validation, in addition to registered string constraints."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 833,
+          "end_line": 861,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L833-L861"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1403,
+          "end_line": 1436,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1403-L1436"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_suggestions",
+      "description": "Return Google Trends autocomplete suggestions for a seed keyword. Use this for lightweight autocomplete or entity candidates; use get_related_queries when you need top or rising demand signals.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "description": "Query string to autocomplete.",
+            "minLength": 1,
+            "pattern": ".*\\S.*",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Language code, e.g. 'en'."
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches TrendsPy autocomplete entity suggestions.",
+      "validation_notes": [
+        "Implementation trims the seed and rejects whitespace-only input through provider validation, in addition to registered string constraints."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 864,
+          "end_line": 883,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L864-L883"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1439,
+          "end_line": 1456,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1439-L1456"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "get_categories",
+      "description": "Return a bounded page of Google Trends category IDs and names for use in the cat parameter of trend tools. Use query to find categories by name and offset/limit to page through broader results; do not guess category IDs.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "pattern": ".*\\S.*",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional case-insensitive substring to match against category names."
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum categories to return in this page.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "description": "Zero-based offset into the filtered category list.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches Google Trends categories, filters category names case-insensitively by substring and applies offset/limit.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/server.py",
+          "start_line": 886,
+          "end_line": 916,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/server.py#L886-L916"
+        },
+        {
+          "path": "src/mcp_trendpulse/news.py",
+          "start_line": 1459,
+          "end_line": 1466,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/news.py#L1459-L1466"
+        }
+      ],
+      "verified": true,
+      "surface": "community",
+      "availability": "Local stdio server mcp_trendpulse.server:mcp"
+    },
+    {
+      "name": "discover_trends",
+      "description": "Discover broad, currently trending search topics in a geographic market. Use this when the user has no specific seed keyword yet and wants emerging topics ranked by growth or volume.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "geo": {
+            "default": "US",
+            "description": "Geographic market, typically an ISO country code such as US, GB, or DE.",
+            "type": "string"
+          },
+          "sort_by": {
+            "default": "growth",
+            "description": "Rank by recent growth or current trend volume.",
+            "enum": [
+              "growth",
+              "volume"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum trends to return.",
+            "maximum": 20,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls ranked Trending Now discovery, maps growth/volume sort and includes at most three news snippets per trend.",
+      "validation_notes": [],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/hosted.py",
+          "start_line": 394,
+          "end_line": 442,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/hosted.py#L394-L442"
+        }
+      ],
+      "verified": true,
+      "surface": "hosted",
+      "availability": "Separate remote HTTP facade mcp_trendpulse.hosted:hosted_mcp; selected by asgi.create_app, authenticated according to remote auth configuration"
+    },
+    {
+      "name": "analyze_keyword_trend",
+      "description": "Analyze one known keyword's Google Trends trajectory. Use this for direction, recent/average/peak normalized interest, growth windows, and a bounded time series; do not use it to compare multiple keywords.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "description": "Single keyword or topic phrase to analyze.",
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic market such as US or GB.",
+            "type": "string"
+          },
+          "source": {
+            "default": "google search",
+            "description": "Google Trends search property.",
+            "enum": [
+              "google search",
+              "youtube search",
+              "news search",
+              "image search",
+              "google shopping"
+            ],
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Google Trends window such as 'today 12-m', 'today 90-d', 'today 5-y', or an exact date range.",
+            "type": "string"
+          },
+          "max_points": {
+            "default": 60,
+            "description": "Maximum time-series points returned after deterministic downsampling.",
+            "maximum": 120,
+            "minimum": 10,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches one term time series and separate 3M/1Y growth; returns latest/average/peak metrics and deterministically downsampled series.",
+      "validation_notes": [
+        "Implementation trims the seed and rejects whitespace-only input through provider validation, in addition to registered string constraints."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/hosted.py",
+          "start_line": 445,
+          "end_line": 484,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/hosted.py#L445-L484"
+        }
+      ],
+      "verified": true,
+      "surface": "hosted",
+      "availability": "Separate remote HTTP facade mcp_trendpulse.hosted:hosted_mcp; selected by asgi.create_app, authenticated according to remote auth configuration"
+    },
+    {
+      "name": "compare_keyword_trends",
+      "description": "Compare 2-5 known keywords on the same Google Trends scale and window. Use this when relative momentum between alternatives matters; use analyze_keyword_trend for only one keyword.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keywords": {
+            "description": "Two to five unique keywords to compare on one normalized Trends request.",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 5,
+            "minItems": 2,
+            "type": "array"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic market such as US or GB.",
+            "type": "string"
+          },
+          "source": {
+            "default": "google search",
+            "description": "Google Trends search property.",
+            "enum": [
+              "google search",
+              "youtube search",
+              "news search",
+              "image search",
+              "google shopping"
+            ],
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Google Trends window shared by all keywords.",
+            "type": "string"
+          },
+          "max_points_per_keyword": {
+            "default": 40,
+            "description": "Maximum returned points for each keyword.",
+            "maximum": 80,
+            "minimum": 10,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Normalizes and validates 2-5 terms, fetches a shared normalized time series and 3M/1Y growth, returns bounded series and metrics per term.",
+      "validation_notes": [
+        "Implementation strips keyword whitespace, rejects empty terms and duplicate normalized keywords, and requires 1-5 comparison keywords; hosted comparison schema requires 2-5. These normalization/uniqueness checks are not encoded as uniqueItems in the input schema."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/hosted.py",
+          "start_line": 487,
+          "end_line": 533,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/hosted.py#L487-L533"
+        }
+      ],
+      "verified": true,
+      "surface": "hosted",
+      "availability": "Separate remote HTTP facade mcp_trendpulse.hosted:hosted_mcp; selected by asgi.create_app, authenticated according to remote auth configuration"
+    },
+    {
+      "name": "discover_related_demand",
+      "description": "Expand one seed keyword into related search demand. Use this for top/rising queries, related topics, and entity suggestions; it does not return a time-series analysis.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "description": "Seed keyword or topic phrase.",
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic market such as US or GB.",
+            "type": "string"
+          },
+          "source": {
+            "default": "google search",
+            "description": "Google Trends search property used for related-demand data.",
+            "enum": [
+              "google search",
+              "youtube search",
+              "news search",
+              "image search",
+              "google shopping"
+            ],
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Google Trends window such as 'today 12-m'.",
+            "type": "string"
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum items returned in each related-demand section.",
+            "maximum": 15,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Combines top/rising related queries, topics and autocomplete suggestions, bounding each section by limit.",
+      "validation_notes": [
+        "Implementation trims the seed and rejects whitespace-only input through provider validation, in addition to registered string constraints."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/hosted.py",
+          "start_line": 536,
+          "end_line": 578,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/hosted.py#L536-L578"
+        }
+      ],
+      "verified": true,
+      "surface": "hosted",
+      "availability": "Separate remote HTTP facade mcp_trendpulse.hosted:hosted_mcp; selected by asgi.create_app, authenticated according to remote auth configuration"
+    },
+    {
+      "name": "get_trend_context",
+      "description": "Add current-news context to one keyword and return a compact recent trend snapshot. Use this when the user asks why a term may be moving now or wants sources to investigate; use analyze_keyword_trend for trend metrics without news.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "keyword": {
+            "description": "Keyword or topic to contextualize.",
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic market for the trend snapshot.",
+            "type": "string"
+          },
+          "news_period_days": {
+            "default": 7,
+            "description": "How many recent days of news to inspect.",
+            "maximum": 30,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_articles": {
+            "default": 5,
+            "description": "Maximum article links returned.",
+            "maximum": 8,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Combines a fixed today 90-d Google Search trend snapshot with recent keyword news links; geo filters trends but does not independently filter news.",
+      "validation_notes": [
+        "Implementation trims the seed and rejects whitespace-only input through provider validation, in addition to registered string constraints."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/hosted.py",
+          "start_line": 581,
+          "end_line": 621,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/hosted.py#L581-L621"
+        }
+      ],
+      "verified": true,
+      "surface": "hosted",
+      "availability": "Separate remote HTTP facade mcp_trendpulse.hosted:hosted_mcp; selected by asgi.create_app, authenticated according to remote auth configuration"
+    },
+    {
+      "name": "find_seo_opportunities",
+      "description": "Find trend-driven SEO keyword candidates from one seed. Use this for rising related queries that are checked against current Google Trends interest. If project_id is supplied, annotate candidates with exact-query Search Console metrics for that authenticated DigestSEO project; without it results remain trend-only. Do not treat either signal as absolute search volume.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "seed_keyword": {
+            "description": "Seed keyword defining the SEO topic space.",
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "geo": {
+            "default": "US",
+            "description": "Geographic market such as US or GB.",
+            "type": "string"
+          },
+          "source": {
+            "default": "google search",
+            "description": "Google Trends search property.",
+            "enum": [
+              "google search",
+              "youtube search",
+              "news search",
+              "image search",
+              "google shopping"
+            ],
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Window used for related demand and trend validation.",
+            "type": "string"
+          },
+          "limit": {
+            "default": 5,
+            "description": "Maximum validated opportunity candidates. Google Trends comparisons are capped at five keywords.",
+            "maximum": 5,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9_-]+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional DigestSEO Site Audit project ID owned by the authenticated account. Enables a 28-day exact-query Search Console validation pass."
+          }
+        },
+        "required": [
+          "seed_keyword"
+        ],
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Selects rising related queries first, then top queries, skips empty/duplicate/seed terms and fetches shared candidate interest. Optional project_id adds 28-day exact-query DigestSEO Search Console metrics.",
+      "validation_notes": [
+        "Implementation trims the seed and rejects whitespace-only input through provider validation, in addition to registered string constraints.",
+        "project_id is nullable but constrained when provided; credentials/auth context are internal, not caller input. Optional DigestSEO failures may be represented as unavailable project context."
+      ],
+      "sources": [
+        {
+          "path": "src/mcp_trendpulse/hosted.py",
+          "start_line": 624,
+          "end_line": 721,
+          "url": "https://github.com/AKzar1el/mcp-trendpulse/blob/e9d7788938ac43bb591871c1929a81aa16a38f93/src/mcp_trendpulse/hosted.py#L624-L721"
+        }
+      ],
+      "verified": true,
+      "surface": "hosted",
+      "availability": "Separate remote HTTP facade mcp_trendpulse.hosted:hosted_mcp; selected by asgi.create_app, authenticated according to remote auth configuration"
+    }
+  ],
+  "schema_runtime": {
+    "fastmcp": "3.4.8",
+    "pydantic": "2.14.1",
+    "python": "3.14"
+  },
+  "reviewed": "2026-10-13"
+}

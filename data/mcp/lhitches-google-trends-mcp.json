@@ -1,0 +1,223 @@
+{
+  "repo": "lhitches/google-trends-mcp",
+  "slug": "lhitches-google-trends-mcp",
+  "commit": "4f23e7f3847addbb12627a6866749ea3033e7532",
+  "source_url": "https://github.com/lhitches/google-trends-mcp",
+  "subdirectory": null,
+  "extraction_method": "Imported server.py without calling tool implementations and enumerated await mcp.list_tools() using MCP 1.30.0 / Pydantic 2.13.5; preserved returned descriptions and inputSchema verbatim. Inspected all registration and implementation source.",
+  "limitations": [
+    "requirements.txt specifies mcp[cli]>=1.28 without an upper bound; current resolution to MCP 2.3.0 fails importing mcp.server.fastmcp. Schemas were extracted using compatible MCP 1.30.0 instead.",
+    "No remote tool calls were executed; Google endpoint availability and data responses were not tested."
+  ],
+  "recommendation": "include",
+  "reason": "All four unconditional registered Google Trends tools have complete locally introspected schemas and implemented behavior; deployment requires compatible MCP 1.x.",
+  "tools": [
+    {
+      "name": "interest_over_time",
+      "description": "Search-interest time series for one or more terms (the core Trends chart).\n\nValues are Google's 0-100 relative index, normalised across the terms in the\nsingle request so they can be compared to each other.\n\nArgs:\n    keywords: 1-5 search terms, e.g. [\"seo agency\", \"digital marketing\"].\n    timeframe: Google Trends range string. Examples:\n        \"now 1-H\", \"now 7-d\", \"today 1-m\", \"today 3-m\", \"today 12-m\",\n        \"today 5-y\", \"all\", or an explicit \"2024-01-01 2024-12-31\".\n    geo: Two-letter country code (e.g. \"AU\", \"US\", \"GB\") or \"\" for worldwide.\n        Sub-regions also work, e.g. \"AU-NSW\".\n\nReturns:\n    dict with the resolved query and a list of {date, <term>:value, ...} rows.\n",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Keywords",
+            "type": "array"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "interest_over_timeArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Creates a fresh pytrends client, builds a web-search payload with category 0, returns relative interest time series with date-only rows and per-term peaks; removes isPartial.",
+      "validation_notes": [
+        "Schema has no minItems/maxItems. Implementation strips and removes blank terms, truncates to the first five, and returns an error if none remain.",
+        "timeframe and geo are passed through without local format validation."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 83,
+          "end_line": 139,
+          "url": "https://github.com/lhitches/google-trends-mcp/blob/4f23e7f3847addbb12627a6866749ea3033e7532/server.py"
+        },
+        {
+          "path": "server.py",
+          "start_line": 31,
+          "end_line": 78,
+          "url": "https://github.com/lhitches/google-trends-mcp/blob/4f23e7f3847addbb12627a6866749ea3033e7532/server.py"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "related_queries",
+      "description": "Top and rising related queries for a single term — the content-idea goldmine.\n\n\"top\" = most popular related searches (relative 0-100). \"rising\" = fastest-growing\n(value is percent growth; \"Breakout\" means >5000% growth).\n\nArgs:\n    keyword: A single search term.\n    timeframe: Google Trends range string (see interest_over_time).\n    geo: Two-letter country code or \"\" for worldwide.\n    limit: Max rows to return per list (default 25).\n",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "title": "Keyword",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "related_queriesArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Builds a single-term pytrends web-search payload with category 0 and returns top/rising related query lists limited using DataFrame.head(limit).",
+      "validation_notes": [
+        "Implementation strips keyword and returns an error for blank input.",
+        "limit has no schema bounds or implementation positivity check; pandas head semantics apply, including negative limits.",
+        "timeframe and geo are passed through without local format validation."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 142,
+          "end_line": 192,
+          "url": "https://github.com/lhitches/google-trends-mcp/blob/4f23e7f3847addbb12627a6866749ea3033e7532/server.py"
+        },
+        {
+          "path": "server.py",
+          "start_line": 31,
+          "end_line": 78,
+          "url": "https://github.com/lhitches/google-trends-mcp/blob/4f23e7f3847addbb12627a6866749ea3033e7532/server.py"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "interest_by_region",
+      "description": "Geographic breakdown of interest for a term (which places search it most).\n\nArgs:\n    keyword: A single search term.\n    resolution: \"COUNTRY\" (worldwide), \"REGION\" (states/territories within a\n        country — requires geo set, e.g. geo=\"AU\"), \"CITY\", or \"DMA\" (US metro).\n    timeframe: Google Trends range string.\n    geo: Two-letter country code, or \"\" for worldwide. Required for REGION/CITY.\n    limit: Max regions to return, ranked by interest (default 30).\n",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "title": "Keyword",
+            "type": "string"
+          },
+          "resolution": {
+            "default": "COUNTRY",
+            "title": "Resolution",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "title": "Geo",
+            "type": "string"
+          },
+          "limit": {
+            "default": 30,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "interest_by_regionArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls pytrends interest_by_region with inc_low_vol=True and inc_geo_code=False, filters zero-interest rows, sorts descending, and returns region names and interest values.",
+      "validation_notes": [
+        "resolution is a plain string in the schema, not an enum. Implementation strips/uppercases and requires COUNTRY, REGION, CITY or DMA.",
+        "REGION and CITY require truthy geo; no country-code format validation is applied.",
+        "Implementation strips keyword and returns an error for blank input.",
+        "limit has no schema bounds or implementation positivity check; pandas head semantics apply, including negative limits."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 195,
+          "end_line": 241,
+          "url": "https://github.com/lhitches/google-trends-mcp/blob/4f23e7f3847addbb12627a6866749ea3033e7532/server.py"
+        },
+        {
+          "path": "server.py",
+          "start_line": 31,
+          "end_line": 78,
+          "url": "https://github.com/lhitches/google-trends-mcp/blob/4f23e7f3847addbb12627a6866749ea3033e7532/server.py"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trending_now",
+      "description": "Currently trending searches for a country — for newsjacking / reactive content.\n\nReads Google's live Trending RSS feed (the ``trends.google.com/trending/rss``\nendpoint). Each item includes the search term, approximate traffic, and the\nnews headlines driving it.\n\nNote: pytrends' own ``trending_searches`` was retired by Google (returns 404),\nso this tool talks to the RSS feed directly instead.\n\nArgs:\n    geo: Two-letter country code, e.g. \"AU\", \"US\", \"GB\", \"NZ\", \"IN\".\n    limit: Max trending items to return (default 20).\n",
+      "inputSchema": {
+        "properties": {
+          "geo": {
+            "default": "AU",
+            "title": "Geo",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "trending_nowArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Fetches Google Trends trending RSS directly for the country, returning term, approximate traffic and the first associated news headline/source for each item.",
+      "validation_notes": [
+        "geo is stripped and uppercased, then checked only for length 2; alphabetic or supported-country membership is not validated.",
+        "limit has no schema bounds or positivity check. Because the break check follows append, zero or negative limits still return one item when a valid item exists."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 244,
+          "end_line": 305,
+          "url": "https://github.com/lhitches/google-trends-mcp/blob/4f23e7f3847addbb12627a6866749ea3033e7532/server.py"
+        },
+        {
+          "path": "server.py",
+          "start_line": 31,
+          "end_line": 78,
+          "url": "https://github.com/lhitches/google-trends-mcp/blob/4f23e7f3847addbb12627a6866749ea3033e7532/server.py"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

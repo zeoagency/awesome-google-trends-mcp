@@ -1,0 +1,245 @@
+{
+  "repo": "den-indance/google-trends-mcp",
+  "slug": "den-indance-google-trends-mcp",
+  "commit": "2831f0da9097006ead3461b3329072746d963803",
+  "source_url": "https://github.com/den-indance/google-trends-mcp",
+  "subdirectory": null,
+  "extraction_method": "Evaluated only the isolated literal ListToolsRequestSchema registration in a Node VM with a stub server and invoked its local callback; inspected every CallToolRequestSchema branch and supporting implementation. No server startup, package installation, credentials or remote tool calls.",
+  "limitations": [
+    "Live Google responses and downstream google-trends-api validation were not tested.",
+    "The registered timeframe input is ignored by all three Trends handlers; its declared default is preserved, not represented as implemented behavior."
+  ],
+  "recommendation": "include",
+  "reason": "All five unconditional registered tools have exact complete literal input schemas and implemented handlers; three are Google Trends tools.",
+  "tools": [
+    {
+      "name": "compare_keywords",
+      "description": "Compare search interest over time for up to 5 keywords",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Up to 5 keywords"
+          },
+          "geo": {
+            "type": "string",
+            "description": "Country code e.g. US, RU (default: worldwide)",
+            "default": ""
+          },
+          "timeframe": {
+            "type": "string",
+            "description": "e.g. today 12-m, today 5-y",
+            "default": "today 12-m"
+          }
+        },
+        "required": [
+          "keywords"
+        ]
+      },
+      "domain": "google-trends",
+      "behavior": "Calls google-trends-api interestOverTime with the keyword array, geo (default worldwide), en-US and timezone 0. Returns timeline entries with formatted dates and a keyword-to-value mapping. Advertised timeframe is ignored.",
+      "validation_notes": [
+        "keywords description says up to 5, but schema has no maxItems or minItems and implementation does not enforce a count.",
+        "timeframe schema default is today 12-m, but implementation neither reads nor forwards timeframe.",
+        "geo uses nullish fallback to empty string; this does not make null valid under the registered string schema.",
+        "No explicit server-side argument validation is performed in the call handler; downstream library errors are returned as isError."
+      ],
+      "sources": [
+        {
+          "path": "server.js",
+          "start_line": 23,
+          "end_line": 35,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L23-L35"
+        },
+        {
+          "path": "server.js",
+          "start_line": 113,
+          "end_line": 123,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L113-L123"
+        },
+        {
+          "path": "trends-client.js",
+          "start_line": 15,
+          "end_line": 49,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/trends-client.js#L15-L49"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_related_queries",
+      "description": "Get top and rising related queries for a keyword",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          },
+          "geo": {
+            "type": "string",
+            "default": ""
+          },
+          "timeframe": {
+            "type": "string",
+            "default": "today 12-m"
+          }
+        },
+        "required": [
+          "keyword"
+        ]
+      },
+      "domain": "google-trends",
+      "behavior": "Calls google-trends-api relatedQueries for keyword and geo (default worldwide), with en-US. Returns rankedKeyword arrays from each rankedList (top and rising query data). Advertised timeframe is ignored.",
+      "validation_notes": [
+        "timeframe schema default is today 12-m, but implementation neither reads nor forwards timeframe.",
+        "No explicit server-side argument validation is performed in the call handler; downstream library errors are returned as isError.",
+        "geo uses nullish fallback to empty string; schema permits strings only."
+      ],
+      "sources": [
+        {
+          "path": "server.js",
+          "start_line": 36,
+          "end_line": 48,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L36-L48"
+        },
+        {
+          "path": "server.js",
+          "start_line": 125,
+          "end_line": 132,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L125-L132"
+        },
+        {
+          "path": "trends-client.js",
+          "start_line": 15,
+          "end_line": 49,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/trends-client.js#L15-L49"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "get_interest_by_region",
+      "description": "Get search interest by region/country for a keyword",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string"
+          },
+          "geo": {
+            "type": "string",
+            "default": ""
+          },
+          "timeframe": {
+            "type": "string",
+            "default": "today 12-m"
+          }
+        },
+        "required": [
+          "keyword"
+        ]
+      },
+      "domain": "google-trends",
+      "behavior": "Calls google-trends-api interestByRegion for keyword and geo (default worldwide), with en-US. Sorts geoMapData by the first interest value descending and returns at most 20 region/value objects. Advertised timeframe is ignored.",
+      "validation_notes": [
+        "timeframe schema default is today 12-m, but implementation neither reads nor forwards timeframe.",
+        "No explicit server-side argument validation is performed in the call handler; downstream library errors are returned as isError.",
+        "geo uses nullish fallback to empty string; schema permits strings only."
+      ],
+      "sources": [
+        {
+          "path": "server.js",
+          "start_line": 52,
+          "end_line": 64,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L52-L64"
+        },
+        {
+          "path": "server.js",
+          "start_line": 136,
+          "end_line": 146,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L136-L146"
+        },
+        {
+          "path": "trends-client.js",
+          "start_line": 15,
+          "end_line": 49,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/trends-client.js#L15-L49"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "proxy_status",
+      "description": "Show proxy pool status: source, working count, age, freshness, and validation progress",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "domain": "server-management",
+      "behavior": "Returns proxy pool source, working count, last-check timestamp, age, freshness, refresh state and progress; returns a disabled/direct-request message when proxies are disabled.",
+      "validation_notes": [
+        "Parameterless tool; provided arguments are ignored."
+      ],
+      "sources": [
+        {
+          "path": "server.js",
+          "start_line": 65,
+          "end_line": 69,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L65-L69"
+        },
+        {
+          "path": "server.js",
+          "start_line": 84,
+          "end_line": 99,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L84-L99"
+        },
+        {
+          "path": "proxy-manager.js",
+          "start_line": 207,
+          "end_line": 233,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/proxy-manager.js#L207-L233"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "proxy_refresh",
+      "description": "Re-validate the current proxy source (PROXY_LIST or PROXY_LIST_FILE). Blocks until done. No-op for PROXY_URL single-proxy mode.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "domain": "server-management",
+      "behavior": "Reloads candidates from the configured proxy source and waits for proxy validation/cache replacement. Returns disabled, single-proxy no-op, empty-source or already-refreshing status where applicable, otherwise working count and last-check timestamp.",
+      "validation_notes": [
+        "Parameterless tool; provided arguments are ignored."
+      ],
+      "sources": [
+        {
+          "path": "server.js",
+          "start_line": 70,
+          "end_line": 74,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L70-L74"
+        },
+        {
+          "path": "server.js",
+          "start_line": 101,
+          "end_line": 111,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/server.js#L101-L111"
+        },
+        {
+          "path": "proxy-manager.js",
+          "start_line": 235,
+          "end_line": 245,
+          "url": "https://github.com/den-indance/google-trends-mcp/blob/2831f0da9097006ead3461b3329072746d963803/proxy-manager.js#L235-L245"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

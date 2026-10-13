@@ -1,0 +1,240 @@
+{
+  "repo": "Quadstronaut/SocialScour",
+  "slug": "quadstronaut-socialscour",
+  "commit": "33fc5ece891230f78603af876441be3b5562ed0e",
+  "source_url": "https://github.com/Quadstronaut/SocialScour",
+  "subdirectory": null,
+  "extraction_method": "Local FastMCP.list_tools() after calling actual main() with FastMCP.run patched to capture server without starting transport; MCP 1.30.0, Pydantic 2.13.5. No tool execution or network tool calls.",
+  "limitations": [
+    "Repository dependencies are lower-bounded, not locked; schema reflects installed MCP/Pydantic versions.",
+    "Runtime service success and trendspy response compatibility were not tested.",
+    "Independent dev-testing MCP prototypes excluded from production tool list; Claude prototype has five explicit schemas recorded separately; Aider prototype uses incompatible/nonexistent current MCP imports and decorator API, so exact registered schemas cannot be established."
+  ],
+  "recommendation": "include",
+  "reason": "All four production registered tools and complete generated schemas verified; ask and discover implement Google Trends operations indirectly, with rolling-window historical keyword data and current US trending keywords, respectively.",
+  "tools": [
+    {
+      "name": "ask",
+      "description": "Run the deterministic ask pipeline. Returns paths only.",
+      "inputSchema": {
+        "properties": {
+          "topic": {
+            "title": "Topic",
+            "type": "string"
+          },
+          "window_days": {
+            "default": 30,
+            "title": "Window Days",
+            "type": "integer"
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Sources"
+          },
+          "summarizer": {
+            "default": "ollama",
+            "title": "Summarizer",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic"
+        ],
+        "title": "askArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Multi-source topic research. When google_trends is selected (default includes it), uses topic as a single keyword; requests interest over time with global geo and rolling timeframe mapped from window_days (<=7: now 7-d; <=30: today 1-m; <=90: today 3-m; otherwise today 12-m), plus top related queries. Stores keyword, window_days, dates/value series and top_related as a raw blob. Trends is not converted to posts or passed into narrative summaries. Returns paths and short status, not Trends data.",
+      "validation_notes": [
+        "sources schema is nullable array of unrestricted strings, not enum; implementation converts values to SourceKind (reddit, hn, indiehackers, google_trends), raising ValueError for unknown strings.",
+        "sources=null or [] selects every source.",
+        "window_days and top_n have no schema bounds or explicit implementation positivity checks.",
+        "Ollama ping is mandatory; every source client is constructed even when its source is not selected.",
+        "summarizer is unrestricted string; copied into configuration/metadata, but ask always calls Ollama summarization and narration. No registered data_root or geo parameter."
+      ],
+      "sources": [
+        {
+          "path": "social_scraper/mcp_server.py",
+          "start_line": 115,
+          "end_line": 120,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/mcp_server.py#L115-L120"
+        },
+        {
+          "path": "social_scraper/mcp_server.py",
+          "start_line": 17,
+          "end_line": 49,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/mcp_server.py#L17-L49"
+        },
+        {
+          "path": "social_scraper/core/pipeline/ask.py",
+          "start_line": 204,
+          "end_line": 217,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/core/pipeline/ask.py#L204-L217"
+        },
+        {
+          "path": "social_scraper/core/sources/google_trends.py",
+          "start_line": 13,
+          "end_line": 90,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/core/sources/google_trends.py#L13-L90"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "discover",
+      "description": "Run the agentic discover loop. Returns paths only.",
+      "inputSchema": {
+        "properties": {
+          "window_days": {
+            "default": 30,
+            "title": "Window Days",
+            "type": "integer"
+          },
+          "top_n": {
+            "default": 5,
+            "title": "Top N",
+            "type": "integer"
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Sources"
+          }
+        },
+        "title": "discoverArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Collects candidate titles from Reddit/HN and, if selected, current Google trending keywords through backend.trending_now(geo=\"US\"), capped to top_n*2. Google candidate lookup ignores window_days and returns [] on unsupported backend/errors. Picks first top_n deduplicated candidates, runs ask pipeline for each subject within five aggregate iterations and 450-second aggregate elapsed check, writing linked summaries. Returns paths/status. Historical interest and related queries are collected in child ask runs.",
+      "validation_notes": [
+        "sources schema is nullable array of unrestricted strings, not enum; implementation converts values to SourceKind (reddit, hn, indiehackers, google_trends), raising ValueError for unknown strings.",
+        "sources=null or [] selects every source.",
+        "window_days and top_n have no schema bounds or explicit implementation positivity checks.",
+        "Ollama ping is mandatory; every source client is constructed even when its source is not selected."
+      ],
+      "sources": [
+        {
+          "path": "social_scraper/mcp_server.py",
+          "start_line": 122,
+          "end_line": 126,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/mcp_server.py#L122-L126"
+        },
+        {
+          "path": "social_scraper/mcp_server.py",
+          "start_line": 52,
+          "end_line": 88,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/mcp_server.py#L52-L88"
+        },
+        {
+          "path": "social_scraper/core/agent/discover.py",
+          "start_line": 39,
+          "end_line": 53,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/core/agent/discover.py#L39-L53"
+        },
+        {
+          "path": "social_scraper/core/agent/discover.py",
+          "start_line": 93,
+          "end_line": 175,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/core/agent/discover.py#L93-L175"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "read_summary",
+      "description": "Read the summary.md from a run folder.",
+      "inputSchema": {
+        "properties": {
+          "run_dir": {
+            "title": "Run Dir",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_dir"
+        ],
+        "title": "read_summaryArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Reads run_dir/summary/summary.md as UTF-8 and returns content or missing-file error. Does not read raw Google Trends data.",
+      "validation_notes": [
+        "String paths/slugs have no format restrictions, traversal checks or existence constraints in schema; implementation only checks path.exists()."
+      ],
+      "sources": [
+        {
+          "path": "social_scraper/mcp_server.py",
+          "start_line": 128,
+          "end_line": 131,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/mcp_server.py#L128-L131"
+        },
+        {
+          "path": "social_scraper/mcp_server.py",
+          "start_line": 91,
+          "end_line": 95,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/mcp_server.py#L91-L95"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "read_timeline",
+      "description": "Read the timeline.md for a topic slug.",
+      "inputSchema": {
+        "properties": {
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug"
+        ],
+        "title": "read_timelineArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Reads data/topics/{slug}/timeline.md as UTF-8 and returns content or missing-file error. Timeline is local run verdict history, not historical Google Trends series.",
+      "validation_notes": [
+        "String paths/slugs have no format restrictions, traversal checks or existence constraints in schema; implementation only checks path.exists()."
+      ],
+      "sources": [
+        {
+          "path": "social_scraper/mcp_server.py",
+          "start_line": 133,
+          "end_line": 136,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/mcp_server.py#L133-L136"
+        },
+        {
+          "path": "social_scraper/mcp_server.py",
+          "start_line": 98,
+          "end_line": 103,
+          "url": "https://github.com/Quadstronaut/SocialScour/blob/33fc5ece891230f78603af876441be3b5562ed0e/social_scraper/mcp_server.py#L98-L103"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

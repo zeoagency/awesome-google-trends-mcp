@@ -1,0 +1,500 @@
+{
+  "repo": "goncaloaguer/unofficial-google-trends-mcp",
+  "slug": "goncaloaguer-google-trends-mcp",
+  "commit": "7967a0b5313ec21263ed9040be6def24f4a3b31a",
+  "source_url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp",
+  "subdirectory": null,
+  "extraction_method": "Local FastMCP.list_tools() introspection with installed mcp 1.30.0 and Pydantic 2.13.5; TRENDS_BACKEND=official selected to avoid constructing network client. Full unconditional decorator registration and default trendspy implementations inspected. No tool invoked.",
+  "limitations": [
+    "Remote endpoint behavior was not tested. Dependencies are range-pinned, so schema formatting may vary across supported MCP/Pydantic versions.",
+    "Official backend is a stub: every data method raises NotImplementedError. Default trendspy backend provides actual implementations.",
+    "Underlying trendspy dependency validation was not exhaustively inspected; wrapper/schema validation is reported."
+  ],
+  "recommendation": "include",
+  "reason": "Eight Google Trends tools have complete locally enumerated schemas and real default-backend implementations, alongside one Autocomplete tool and one server-management tool. Warn about related endpoint quota failures and exclude official-backend deployment from functioning data providers.",
+  "tools": [
+    {
+      "name": "interest_over_time",
+      "description": "Relative search interest over time for up to 5 terms (Google Trends' main chart).\n\nValues are 0-100 within the query: 100 is the peak of the most popular\nterm in the requested period/geo. Passing multiple terms makes them\ndirectly comparable to each other.",
+      "inputSchema": {
+        "properties": {
+          "keywords": {
+            "description": "1 to 5 search terms to compare.",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 5,
+            "minItems": 1,
+            "title": "Keywords",
+            "type": "array"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Time range: 'now 1-H', 'now 4-H', 'now 1-d', 'now 7-d', 'today 1-m', 'today 3-m', 'today 12-m' (default), 'today 5-y', 'all', or explicit dates 'YYYY-MM-DD YYYY-MM-DD'.",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "description": "Two-letter country code ('US', 'PT', 'GB') or region code ('US-CA'). Empty string = worldwide.",
+            "title": "Geo",
+            "type": "string"
+          },
+          "category": {
+            "default": 0,
+            "description": "Google Trends category ID to narrow results (0 = all categories). Use search_categories to find IDs.",
+            "title": "Category",
+            "type": "integer"
+          },
+          "gprop": {
+            "default": "",
+            "description": "Google property: '' = web search (default), 'images', 'news', 'youtube', or 'froogle' (shopping).",
+            "title": "Gprop",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keywords"
+        ],
+        "title": "interest_over_timeArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls trendspy interest_over_time with up to five terms and returns relative 0–100 series, query context and scale note; caches for 12 hours.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool.",
+        "Timeframe/geo/category values are descriptive guidance, not enum/pattern/range constraints; category has no minimum.",
+        "keywords minItems=1 and maxItems=5 are schema constraints; string items have no nonempty constraint. gprop options are prose only, not enum."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 89,
+          "end_line": 113,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L89"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 189,
+          "end_line": 207,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L189"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "interest_by_region",
+      "description": "Where a term is searched most — relative interest broken down by geography.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "A single search term.",
+            "title": "Keyword",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Time range: 'now 1-H', 'now 4-H', 'now 1-d', 'now 7-d', 'today 1-m', 'today 3-m', 'today 12-m' (default), 'today 5-y', 'all', or explicit dates 'YYYY-MM-DD YYYY-MM-DD'.",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "description": "Two-letter country code ('US', 'PT', 'GB') or region code ('US-CA'). Empty string = worldwide.",
+            "title": "Geo",
+            "type": "string"
+          },
+          "resolution": {
+            "default": "",
+            "description": "Geographic granularity: 'COUNTRY' (default when worldwide), 'REGION' (states/districts), 'CITY', or 'DMA' (US metro areas).",
+            "title": "Resolution",
+            "type": "string"
+          },
+          "category": {
+            "default": 0,
+            "description": "Google Trends category ID to narrow results (0 = all categories). Use search_categories to find IDs.",
+            "title": "Category",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "interest_by_regionArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls trendspy interest_by_region for one term; returns geographic interest records and query context, cached 12 hours.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool.",
+        "Timeframe/geo/category values are descriptive guidance, not enum/pattern/range constraints; category has no minimum.",
+        "resolution options are prose only; empty string is converted to None for trendspy, although caller null is not in input schema."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 116,
+          "end_line": 135,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L116"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 209,
+          "end_line": 224,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L209"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "related_queries",
+      "description": "Top and rising search queries related to a term.\n\nWARNING: Google has quota-starved this endpoint for automated clients —\nit fails most of the time. Prefer keyword_ideas for keyword research;\nonly call this if the user explicitly asks for Trends related queries.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "A single search term.",
+            "title": "Keyword",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Time range: 'now 1-H', 'now 4-H', 'now 1-d', 'now 7-d', 'today 1-m', 'today 3-m', 'today 12-m' (default), 'today 5-y', 'all', or explicit dates 'YYYY-MM-DD YYYY-MM-DD'.",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "description": "Two-letter country code ('US', 'PT', 'GB') or region code ('US-CA'). Empty string = worldwide.",
+            "title": "Geo",
+            "type": "string"
+          },
+          "category": {
+            "default": 0,
+            "description": "Google Trends category ID to narrow results (0 = all categories). Use search_categories to find IDs.",
+            "title": "Category",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "related_queriesArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls trendspy related_queries and returns top/rising query data with context and growth note; cached 12 hours; dedicated quota cooldown.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool.",
+        "Timeframe/geo/category values are descriptive guidance, not enum/pattern/range constraints; category has no minimum.",
+        "Registered and implemented, but description and backend warn Google quota makes endpoint usually fail; not a stub on default backend."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 138,
+          "end_line": 150,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L138"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 226,
+          "end_line": 243,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L226"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "related_topics",
+      "description": "Top and rising topics (Knowledge Graph entities) related to a term.\n\nWARNING: same quota-starved endpoint as related_queries — usually fails.\nPrefer keyword_ideas unless the user explicitly asks for this.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "A single search term.",
+            "title": "Keyword",
+            "type": "string"
+          },
+          "timeframe": {
+            "default": "today 12-m",
+            "description": "Time range: 'now 1-H', 'now 4-H', 'now 1-d', 'now 7-d', 'today 1-m', 'today 3-m', 'today 12-m' (default), 'today 5-y', 'all', or explicit dates 'YYYY-MM-DD YYYY-MM-DD'.",
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "description": "Two-letter country code ('US', 'PT', 'GB') or region code ('US-CA'). Empty string = worldwide.",
+            "title": "Geo",
+            "type": "string"
+          },
+          "category": {
+            "default": 0,
+            "description": "Google Trends category ID to narrow results (0 = all categories). Use search_categories to find IDs.",
+            "title": "Category",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "related_topicsArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls trendspy related_topics for Knowledge Graph related topics with query context; cached 12 hours; dedicated quota cooldown.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool.",
+        "Timeframe/geo/category values are descriptive guidance, not enum/pattern/range constraints; category has no minimum.",
+        "Registered and implemented, but description and backend warn Google quota makes endpoint usually fail; not a stub on default backend."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 153,
+          "end_line": 164,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L153"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 245,
+          "end_line": 258,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L245"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "trending_now",
+      "description": "Searches trending right now in a country (Google Trends 'Trending now' feed).",
+      "inputSchema": {
+        "properties": {
+          "geo": {
+            "default": "US",
+            "description": "Two-letter country code, e.g. 'US', 'PT'.",
+            "title": "Geo",
+            "type": "string"
+          }
+        },
+        "title": "trending_nowArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls trendspy trending_now for a country; returns first 25 trends, strips news_tokens/topics/normalized_keyword and caps trend_keywords to eight; cached 15 minutes.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 167,
+          "end_line": 174,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L167"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 260,
+          "end_line": 276,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L260"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "keyword_suggestions",
+      "description": "Disambiguation suggestions for a term (e.g. 'python' → programming language vs snake).\n\nReturned topic IDs can be used as more precise 'keywords' in other tools.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "Term to get Google Trends topic suggestions for.",
+            "title": "Keyword",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "keyword_suggestionsArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls trendspy suggestions for topic disambiguation; returns suggestions and seed term, cached seven days.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 177,
+          "end_line": 186,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L177"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 278,
+          "end_line": 283,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L278"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "search_categories",
+      "description": "Find Google Trends category IDs by name, for the 'category' parameter of other tools.",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "description": "Category name to search for, e.g. 'finance', 'health'.",
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_categoriesArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls trendspy categories(find=query) and returns matching category metadata, cached seven days.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 189,
+          "end_line": 196,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L189"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 285,
+          "end_line": 290,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L285"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "search_locations",
+      "description": "Find geo codes by location name, for the 'geo' parameter of other tools.",
+      "inputSchema": {
+        "properties": {
+          "query": {
+            "description": "Location name to search for, e.g. 'Portugal', 'California'.",
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_locationsArguments",
+        "type": "object"
+      },
+      "domain": "google-trends",
+      "behavior": "Calls trendspy geo(find=query) and returns matching location codes, cached seven days.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 199,
+          "end_line": 206,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L199"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 292,
+          "end_line": 295,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L292"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "keyword_ideas",
+      "description": "Keyword research via Google Autocomplete: what people actually type into Google.\n\nReliable and fast (no Trends quota). Returns direct suggestions plus\nexpansions for intent modifiers (how/best/vs/why/near). Use this instead\nof related_queries.",
+      "inputSchema": {
+        "properties": {
+          "keyword": {
+            "description": "Seed keyword to expand.",
+            "title": "Keyword",
+            "type": "string"
+          },
+          "geo": {
+            "default": "",
+            "description": "Two-letter country code to localize results, e.g. 'PT', 'US'.",
+            "title": "Geo",
+            "type": "string"
+          },
+          "language": {
+            "default": "en",
+            "description": "Language code for suggestions, e.g. 'en', 'pt'.",
+            "title": "Language",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyword"
+        ],
+        "title": "keyword_ideasArguments",
+        "type": "object"
+      },
+      "domain": "other",
+      "behavior": "Requests Google Autocomplete directly for seed plus how/best/vs/why/near expansions; uses geo/language, caches 24 hours, returns suggestions without search-volume ranking.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared.",
+        "Default trendspy implementation has no additional explicit argument validation at this wrapper layer; Google/trendspy may reject unsupported strings. Official backend raises NotImplementedError for this tool.",
+        "Individual HTTP failures become empty suggestion lists; raises RuntimeError when all seed/expansion results are empty."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 209,
+          "end_line": 224,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L209"
+        },
+        {
+          "path": "backends/trendspy_backend.py",
+          "start_line": 297,
+          "end_line": 343,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/backends/trendspy_backend.py#L297"
+        }
+      ],
+      "verified": true
+    },
+    {
+      "name": "server_status",
+      "description": "Health check: which data backend is active and how the server is configured.",
+      "inputSchema": {
+        "properties": {},
+        "title": "server_statusArguments",
+        "type": "object"
+      },
+      "domain": "server-management",
+      "behavior": "Returns active backend, version, path-secret-enabled boolean, configured delay and cache summary without upstream calls.",
+      "validation_notes": [
+        "All registrations are unconditional. No injected context parameters. Schema does not specify additionalProperties; no null types, enums, or pattern constraints are declared."
+      ],
+      "sources": [
+        {
+          "path": "server.py",
+          "start_line": 227,
+          "end_line": 237,
+          "url": "https://github.com/goncaloaguer/unofficial-google-trends-mcp/blob/7967a0b5313ec21263ed9040be6def24f4a3b31a/server.py#L227"
+        }
+      ],
+      "verified": true
+    }
+  ],
+  "reviewed": "2026-10-13"
+}

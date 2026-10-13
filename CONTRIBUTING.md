@@ -1,12 +1,20 @@
 # Contributing
 
-Suggest MCP servers, CLIs, and SDKs or client libraries with an implemented Google Trends integration. Read [AGENTS.md](AGENTS.md) for the inclusion rules, verification process, and entry format.
+Suggest MCP tools with implemented Google Trends access, or relevant CLIs and client libraries. Read [AGENTS.md](AGENTS.md) for the scope and verification rules.
 
-## Pull request checklist
+## MCP updates
 
-- [ ] The project has a publicly accessible implementation and an MCP, CLI, or reusable client interface for Google Trends data.
-- [ ] I checked its README and source code, including the Google Trends data source and each described feature.
-- [ ] The entry appears once under its primary interface, uses a canonical project link, and marks archived repositories.
-- [ ] The entry uses `| [**owner/repo**](url) | <verb-first description> |` with one or two concise, factual sentences.
-- [ ] The comparison row and section counts match the entry; internal anchors and project links resolve.
+- Inspect the actual tool registrations and handlers; provide commit-pinned sources or a dated hosted tools/list capture.
+- Add or update the provider's complete record in data/mcp/, preserving exact names, registered descriptions, and full input schemas. Mark non-Trends tools, separate server surfaces, and document implementation limits.
+- Update data/catalog.json with a capability group, a concise behavior summary, and useful tool links derived from the implementation.
+- Run `python3 maintenance/build_catalog.py` to rebuild the provider pages, catalog, and complete name index.
+
+## Checks
+
+- [ ] Google Trends functionality is implemented and reachable through the documented interface; artifact-only outputs are identified.
+- [ ] The complete configured tool set is recorded, including schema constraints and additional server surfaces, without inferred parameters.
+- [ ] Grouping and descriptions follow tool behavior; unsupported tools and unrelated gateway tools are not featured.
+- [ ] `python3 maintenance/build_catalog.py --check` passes.
 - [ ] `npx --yes markdownlint-cli2@latest "**/*.md"` passes with zero issues.
+
+For standalone CLIs and SDKs, update [docs/clients.md](docs/clients.md) with a canonical link and one or two factual sentences, marking archived projects.
