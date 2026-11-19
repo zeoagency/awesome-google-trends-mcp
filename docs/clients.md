@@ -4,7 +4,7 @@
 
 ## CLIs
 
-*5 projects. Terminal tools with implemented Google Trends commands.*
+*6 projects. Terminal tools with implemented Google Trends commands.*
 
 | Project | What it does |
 |---|---|
@@ -13,6 +13,7 @@
 | [**mamboyepez17/trendscope**](https://github.com/mamboyepez17/trendscope) | Combines Google Trends country RSS feeds and pytrends keyword interest with other sources in an interactive analysis CLI. Produces local JSON and report files. |
 | [**Nao-30/google-trends-cli**](https://github.com/Nao-30/google-trends-cli) | Fetches trending searches, compares topics, and explores related and geographic interest through trendspy. Provides terminal tables, file exports, and a FastAPI service. |
 | [**RuochenLyu/google-trends-now**](https://github.com/RuochenLyu/google-trends-now) | Fetches Google Trending Now through its web RPC endpoint, with a limited RSS fallback. Exports JSON, NDJSON, CSV, or Markdown through CLI and JavaScript interfaces. |
+| [**sassrami/google-trends-compare**](https://github.com/sassrami/google-trends-compare) | Compares any number of keywords on one shared Google Trends 0-100 scale and writes a CSV, with a Colab notebook. Calls a hosted Apify Actor, which needs an Apify token and is paid per result. |
 
 ## SDKs and client libraries
 
